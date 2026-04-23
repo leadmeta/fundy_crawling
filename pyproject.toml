@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "fundy-crawler"
+version = "0.1.0"
+description = "A web crawler to collect startup funding policy info"
+authors = ["User <user@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+scrapy = "^2.11.1"
+scrapy-playwright = "^0.0.35"
+playwright = "^1.42.0"
+sqlalchemy = "^2.0.28"
+meilisearch = "^0.30.0"
+pandas = "^2.2.1"
+requests = "^2.31.0"
+pyyaml = "^6.0.1"
+beautifulsoup4 = "^4.12.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,40 @@
+[
+  {
+    "svcSeq": "809611",
+    "svcId": "142100000020",
+    "svcNm": "1인 사업자 보조공학기기 지원",
+    "svcIntrcnCts": "",
+    "svcPpo": "1인 장애인 사업주에게 보조공학기기를 지원하여 \r\n경영활동 안정화 및 장애인 고용 촉진",
+    "sportFr": "현금",
+    "reqstTmlmt": "3~4월",
+    "reqstProcssType": "오프라인",
+    "sportTg": "○ 장애인기업 중 1인 중증장애인 사업주",
+    "slctnStdr": "○ 평가우수자 선정",
+    "svcCts": "1인 장애인기업 사업주(대표자) 대상 보조공학기기\r\n(점자단말기, 의사소통보조기기, 사무보조기기 등) 물품가액 5백만원 한도 내 지원(자부담 10%)",
+    "reqstProcss": "방문 : 서울특별시 영등포구 버드나루로 14길 25, 6층, 우편",
+    "posesPapers": "1인 장애인 사업주 보조공학기기 지원사업 지원금 지급 신청서\r\n보조공학기기 납품 확인서\r\n보조공학기기 이용 전․후 사진\r\n보조공학기기 구매 관련 서류\r\n지원금 지급 통장 사본",
+    "posesPapersPblofcl": "",
+    "posesPapersAgr": "",
+    "rcvOrgNm": "(재)장애인기업종합지원센터",
+    "refrncNm": "(재)장애인기업종합지원센터(02-2181-6531)",
+    "refrncTelNo": "",
+    "jrsdOrg": "중소벤처기업부",
+    "reqstMeanCls": "03",
+    "modDh": "2025-11-27",
+    "benefitLsBasis": [
+      {
+        "lsInfoSeq": "261933",
+        "lsKoNm": "장애인기업활동 촉진법 시행령",
+        "atclOneNo": "10",
+        "atclTwoNo": "",
+        "clusNo": "2",
+        "ancNo": "34449",
+        "ancDt": "20240423",
+        "lsKndNm": "법령",
+        "extrlLinkUrl": "https://www.law.go.kr/법령/장애인기업활동 촉진법 시행령/(34449,20240423)"
+      }
+    ],
+    "benefitReqstdoc": null,
+    "esiteUrl": ""
+  }
+]

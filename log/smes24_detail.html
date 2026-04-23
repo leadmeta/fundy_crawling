@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="ko" class="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Expires" content="-1">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="No-Cache">
+    <link rel="shortcut icon" type="image/x-icon" href="/main/resources/theme/portal/assets/image/etc/favicon.png">
+    <meta name="description" content="중소벤처24는 기업관련 인증·증명(확인)서 발급 및 지원사업 안내·신청, 중기부 소관 민원 등 중소벤처기업부 산하 다양한 기관에 흩어져 제공되던 서비스를 한곳에서 통합 제공하는 중소벤처기업을 위한 포털입니다.">
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/common.css?dummy=20260412152201632" type="text/css"/>
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/default.css?dummy=20260412152201632" type="text/css"/>
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/datepicker.css" type="text/css"/>
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/fullpage.css" type="text/css"/>
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/main.css?dummy=20260412152201632" type="text/css"/>
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/custom.css?dummy=20260412152201632" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/main/resources/theme/portal/assets/style/new/motion.css" /><!-- 20211221 추가 -->
+
+    <link rel="stylesheet" type="text/css" href="/main/resources/theme/portal/assets/style/new23/main.css" /><!-- 20230425 추가 -->
+    <link rel="stylesheet" type="text/css" href="/main/resources/theme/portal/assets/style/new23/modal.css" />
+    <link rel="stylesheet" type="text/css" href="/main/resources/theme/portal/assets/style/remixicon.css" /><!-- 20241015 추가 -->
+
+    <!-- sub 전용 css -->
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/contents.css?dummy=20260412152201632" type="text/css"/>
+    <link rel="stylesheet" href="/main/resources/theme/portal/assets/style/contents_2024.css?dummy=20260412152201632" type="text/css"/><!-- 20241116 추가 -->
+    <link rel="stylesheet" type="text/css" href="/main/resources/theme/portal/assets/style/new/layout.css?dummy=20260412152201632" /><!-- 20211015 추가 -->
+    <link rel="stylesheet" type="text/css" href="/main/resources/theme/portal/assets/style/new/onStyle.css?dummy=20260412152201632" />
+
+    <!-- Scripts -->
+    <script src="/main/resources/theme/portal/assets/script/new/jquery-3.5.1.min.js"></script>
+    <script src="/main/resources/theme/portal/assets/script/polyfill.min.js"></script>
+    <script src="/main/resources/theme/portal/assets/script/eligrey-classlist-js-polyfill.js"></script>
+    <script src="/main/resources/theme/portal/assets/script/findindex_polyfill_mdn.js"></script>
+    <script src="/main/resources/theme/portal/assets/script/swiper.min.js"></script>
+    <script type="text/javascript" src="/main/resources/theme/portal/assets/script/ui.js"></script>
+    <script type="text/javascript" src="/main/resources/theme/portal/assets/script/Chart.js"></script>
+    <script type="text/javascript" src="/main/resources/theme/portal/assets/script/nppfs/nppfs-1.13.0.js"></script>
+    <script type="text/javascript" src="/main/resources/theme/portal/assets/script/common.js?dummy=20260412152201632"></script>
+    <script src="/main/resources/theme/portal/assets/script/new/gnb-main.js"></script><!-- 20211221 추가 -->
+    <script type="text/javascript" src="/main/user/js/log.js;jsessionid=2DA16313250F0768D16B72C83BAC3144?22022502"></script>
+
+    <!-- jQuery Validate -->
+    <script src="/main/resources/theme/portal/assets/vendor/jquery.validate/jquery.validate.min.js"></script>
+    <script src="/main/resources/theme/portal/assets/vendor/jquery.validate/localization/messages_ko.js"></script>
+    <title>
+        사업공고 | 공고 조회·신청 | 중소벤처24</title>
+    <style>
+        .select.mobile-menu{display:none}
+        @media (max-width:1280px) {
+            .select.mobile-menu{display:block}
+        }
+        .m_search_box{
+        margin-left: 80px;
+        }
+
+    </style>
+    <script>
+        let chkLogin;
+        var authGrpId = 'G004';
+        //session
+        const sessionTime = 1000*60*30;
+        var time  = sessionTime;
+        $(document).ready(function(){
+        	 if(''){
+                 fnCheckSession();
+                 chkLogin = setInterval(fnCheckSession, 1000);
+        	 }
+        });
+        function sessionCheck(){
+            $.ajax({
+                type : "get",
+                url: '/main/portal/chkSession',
+                dataType: 'text', //전송받을 데이터의 타입
+                success: function(data) {
+                    if(data === "F"){
+                        clearInterval(chkLogin);
+                        alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+                        window.location = "/main/";
+                    }else{
+                        time = sessionTime;
+                        alert("연장되었습니다.");
+                    }
+                }
+            });
+        }
+
+        function fnCheckSession() {
+            let remainMinte, remainSecond, remainMinSec;
+            time = time - 1;
+            remainMinte = parseInt((time / 60) % 30);    // 남은 분
+            remainSecond = parseInt(time % 60);          // 남은 초
+
+            if(time > 0) {
+                remainMinSec = fnLpad(remainMinte, 2) + "분 " + fnLpad(remainSecond, 2) + "초";
+            } else {
+                $.ajax({
+                    type : "get",
+                    url: '/main/portal/chkSession',
+                    dataType: 'text', //전송받을 데이터의 타입
+                    success: function(data) {
+                        if(data === "F"){
+                            clearInterval(chkLogin);
+                            alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+                            window.location = "/main/";
+                        }
+                    }
+                });
+            }
+            $("#sessTime").text(remainMinSec);
+        }
+
+        function fnLpad(str, len) {
+            str = str + "";
+            while(str.length < len) {
+                str = "0" + str;
+            }
+            return str;
+        }
+
+        if(''){
+/*            chkLogin = setInterval(function(){
+                $.ajax({
+                    type : "get",
+                    url: '/main/portal/chkSession',
+                    dataType: 'text', //전송받을 데이터의 타입
+                    success: function(data) {
+                        if(data === "F"){
+                            clearInterval(chkLogin);
+                            alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+                            window.location = "/main/";
+                        }
+                    }
+                });
+            }, sessionTime);*/
+
+            //30분후 세션 강제 종료
+            setTimeout(function(){
+                $.ajax({
+                    type : "get",
+                    url: '/main/portal/invalSession',
+                    dataType: 'text',
+                    success: function(data) {}
+                });
+            }, 1000*60*30);
+        }
+
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        };
+
+        var IS_MOBILE = isMobileDevice();
+
+    </script>
+</head>
+<body class="is-preload homepage" id="body">
+    <div class="smes_wrapper" id="smes" style="display:none">
+        <div class="v-box">
+            <div class="logo-element">
+                <div class="inner">
+                    <img src="/main/resources/theme/portal/assets/image/etc/logo_smes.png" alt="중소벤처24">
+                </div>
+
+                <div class="error-txt">
+                        중소&middot;벤처기업을 위한 통합포털, 중소벤처24<br>서비스 준비중입니다.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading-overlay">
+        <div class="loader"></div>
+    </div>
+    <div id="skipNavigation" title="스킵내비게이션">
+        <a href="#gnb">주메뉴 바로가기 </a>
+        <a href="#contents"> 본문 내용 바로가기 </a>
+    </div>
+    <div class="wrapper">
+    <!-- start:header -->
+
+<script>
+    function fn_loadLoginPage()
+    {
+        if( !confirm("로그인 후 해당 페이지로 연계할 수 있습니다.\n로그인페이지로 이동하시겠습니까?") ) return;
+
+        location.href="/main/mber/login";
+    }
+
+    function fn_setStatLog(cntcSysDvsnCd)
+    {
+        let  codeValue = getKindInfo(cntcSysDvsnCd);
+        setStatLog('LU00',codeValue,'');
+    }
+
+    function fn_popup(url,code){
+        if(code == "MRO"){
+            alert("해당 시스템은 아임스타즈로 통합됨에 따라 아임스타즈로 이동됩니다.")
+        }
+        //if( url.indexOf( "connClient" ) != -1 )
+        // {
+        //    window.open( '/main'+url, 'mberCheckPopup', 'width=420, height=280, resizable=0, scrollbars=no, status=0, titlebar=0, toolbar=0, left=450, top=200' );
+        //}
+        //else
+        //{
+            window.open('about:blank').location.href = ""+url;
+        //}
+    }
+
+    $(window).on( "message", function(e){
+        if( e.originalEvent.data )
+        {
+            var result = e.originalEvent.data;
+
+            if( result.existYn == "N" )
+            {
+                var reqSiteWindow = window.open( '', 'reqSiteNewWindow' );
+
+                $("#reqSiteFrm [name='bizno']").val( result.bizno );
+                $("#reqSiteFrm [name='ci']").val( result.ci );
+                $("#reqSiteFrm [name='name']").val( result.name );
+                $("#reqSiteFrm [name='email']").val( result.email );
+                $("#reqSiteFrm [name='hp']").val( result.hp );
+
+//              $("#reqSiteFrm").attr("action", result.joinUrl);
+                document.getElementById("reqSiteFrm").action = result.joinUrl;
+                $("#reqSiteFrm").attr("target", "reqSiteNewWindow");
+                $("#reqSiteFrm").submit();
+            }
+            else if ( result.existYn == "Y" )
+            {
+                window.open( result.loginUrl, 'reqSiteExistWindow' );
+            }
+        }
+    } );
+
+    function fn_logout(){
+        $.ajax({
+            type : "post",
+            url: '/main/mber/ajaxLogout',
+            dataType: 'text', //전송받을 데이터의 타입
+            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function(data) {
+                //if(data   ==  "true"){
+                    alert("로그아웃 되었습니다.");
+                    location.href = "/main/index";
+                //}else{
+                //  alert("로그아웃 실패하였습니다.");
+                //}
+            },
+            error: function(data, status, err) {
+                alert("로그아웃 되었습니다.");
+                location.href = "/main/index";
+            }
+        });
+    }
+</script>
+<script>
+/** 모바일 토글 메뉴 **/
+function nav_toggle_open() {
+    document.getElementById("mySidebar").style.width = "100%";
+    document.getElementById("mySidebar").style.display = "block";
+    $('html, body').css('overflow','hidden');
+}
+
+function nav_toggle_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    $('html, body').css('overflow','');
+}
+</script>
+<!-- header -->
+<header class="sub_header header header_bg">
+    <!-- 상단 util -->
+    <div class="head_util">
+        <div class="util_area">
+            <ul class="util_info fl_left">
+                <li><a href="/main/portalIntro">중소벤처24 소개</a></li>
+                <li><a href="/main/useHelp">처음 오셨나요?</a></li>
+            </ul>
+            <ul class="util_member fl_right">
+                <li><a href="/main/mber/login" class="util_login">로그인</a></li>
+                        <li><a href="/main/mber/selectMemberType" class="util_join">회원가입</a></li>
+                    <li><a href="javascript:void(0)" class="header-site">통합 로그인</a></li>
+            </ul>
+        </div>
+        <!-- 통합로그인 -->
+        <div>
+            <ul class="tnb">
+                <li class="etc">
+                    <div class="header-site-wrap h-29">
+                        <div class="site-header">
+                            <div class="site-rela">
+                                <div class="site-title-wrap">
+                                    <p class="pic"><img src="/main/resources/theme/portal/assets/image/etc/etc-logo.png" alt="중소벤처 24"/></p>
+                                    <p class="desc"><strong>통합 로그인 사이트 바로가기</strong>중소벤처기업부 통합인증서비스</p>
+                                </div>
+                                <div class="site-btn">
+                                    <button class="btn_toggle_close close_totalLogin">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="site-cont">
+                            <!-- 로그인 하기 전 화면에서 탭 표시  -->
+                            <div class="popup-tab">
+                                    <ul>
+                                         <li class="on"><a href="javascript:void(0);" class="p">개인회원</a></li>
+                                        <li><a href="javascript:void(0);" class="c">기업회원</a></li>
+                                    </ul>
+                                </div>
+                            <dl class="type01">
+                                <dt>통합 로그인 사이트</dt>
+                                <dd>
+                                    <!-- 세션이 없을때  -->
+                                        <div class="site_list p">
+                                            <ul>
+                                                <li class="SFDB"><a href="javascript:fn_loadLoginPage();"><strong>스마트공장 사업관리시스템</strong><span>스마트공장 시스템 사업 정보 제공</span></a></li>
+                                                    <li class="SMTC"><a href="javascript:fn_loadLoginPage();"><strong> 중소기업 기술개발사업 종합관리시스템</strong><span>기술개발지원사업 정보 제공</span></a></li>
+                                                    <li class="SBCM"><a href="javascript:fn_loadLoginPage();"><strong>중소기업 인력지원사업 종합관리시스템</strong><span>인력 지원사업 정보 제공</span></a></li>
+                                                    <li class="OMIS"><a href="javascript:fn_loadLoginPage();"><strong>중소기업수출지원센터</strong><span>중소기업의 해외시장진을을 지원하기 위한 서비스 제공</span></a></li>
+                                                    <li class="IRIS"><a href="javascript:fn_loadLoginPage();"><strong>범부처통합연구지원시스템</strong><span>연구관리 규정 및 지침 통합시스템</span></a></li>
+                                                    <li class="VCSK"><a href="javascript:fn_loadLoginPage();"><strong>벤처투자종합포털</strong><span>벤처투자 관련 종합정보 서비스 제공</span></a></li>
+                                                    <li class="EXCT"><a href="javascript:fn_loadLoginPage();"><strong>해외규격인증획득지원센터</strong><span>중소기업에 효율적 인증업무 지원</span></a></li>
+                                                    <li class="KSTR"><a href="javascript:fn_loadLoginPage();"><strong>k스타트업</strong><span>창업컨텐츠, 창업 사업 정보 제공</span></a></li>
+                                                    <li class="CKSU"><a href="javascript:fn_loadLoginPage();"><strong>창업기업 확인시스템</strong><span>창업기업 확인시스템</span></a></li>
+                                                    <li class="SMBA"><a href="javascript:fn_loadLoginPage();"><strong>중소기업 현황정보시스템</strong><span>중소기업확인서 신청 및 발급 제공</span></a></li>
+                                                    <li class="SUP"><a href="javascript:fn_loadLoginPage();"><strong>소상공인24</strong><span>창업 및 운영 정보 제공</span></a></li>
+                                                    <li class="SGSE"><a href="javascript:fn_loadLoginPage();"><strong>소상공인365</strong><span>업종별 상권분석 정보 제공</span></a></li>
+                                                    <li class="EDUM"><a href="javascript:fn_loadLoginPage();"><strong>소상공인지식배움터</strong><span>소상공인 단계별 맞춤형 교육 제공</span></a></li>
+                                                    <li class="GSMB"><a href="javascript:fn_loadLoginPage();"><strong>참괜찮은강소기업플랫폼</strong><span>우수 중소기업 및 채용정보를 제공합니다</span></a></li>
+                                                    <li class="ULTR"><a href="javascript:fn_loadLoginPage();"><strong>기술보호울타리</strong><span>기술보호 정부사업 정보 제공</span></a></li>
+                                                    <li class="SIMS"><a href="javascript:fn_loadLoginPage();"><strong>기업마당</strong><span>중소기업 지원정책 정보 제공 </span></a></li>
+                                                    <li class="BIZT"><a href="javascript:fn_loadLoginPage();"><strong>비즈니스지원단</strong><span>중소기업 경영애로 해소</span></a></li>
+                                                    <li class="NGSP"><a href="javascript:fn_loadLoginPage();"><strong>중소벤처기업진흥공단 홈페이지</strong><span>기업 자금 운영지원 정보 제공</span></a></li>
+                                                    <li class="BNET"><a href="javascript:fn_loadLoginPage();"><strong>창업보육센터 네트워크시스템</strong><span>창업지원 종합정보 제공</span></a></li>
+                                                    <li class="CSR"><a href="javascript:fn_loadLoginPage();"><strong>사회적책임경영시스템</strong><span>사회적책임경영시스템</span></a></li>
+                                                    </ul>
+                                        </div>
+                                        <div class="site_list c" style="display: none;">
+                                            <ul>
+                                                <li class="CBIZ"><a href="javascript:fn_loadLoginPage();"><strong>협업정보시스템</strong><span>중소기업협업지원 사업 정보 제공</span></a></li>
+                                                    <li class="SBCM"><a href="javascript:fn_loadLoginPage();"><strong>중소기업 인력지원사업 종합관리시스템</strong><span>인력 지원사업 정보 제공</span></a></li>
+                                                    <li class="VNTR"><a href="javascript:fn_loadLoginPage();"><strong>벤처확인종합관리시스템</strong><span>벤처확인 온라인 신청 제공</span></a></li>
+                                                    <li class="IBIZ"><a href="javascript:fn_loadLoginPage();"><strong>이노비즈넷</strong><span>이노비즈 인증 신청 및 발급 제공</span></a></li>
+                                                    <li class="MNA"><a href="javascript:fn_loadLoginPage();"><strong>M&A 정보망</strong><span>M&A정보 및 자문기관 상담 제공</span></a></li>
+                                                    <li class="SPTL"><a href="javascript:fn_loadLoginPage();"><strong>판판대로</strong><span>중소기업 유통 사업 정보 제공</span></a></li>
+                                                    <li class="OMIS"><a href="javascript:fn_loadLoginPage();"><strong>중소기업수출지원센터</strong><span>중소기업의 해외시장진을을 지원하기 위한 서비스 제공</span></a></li>
+                                                    <li class="VCSK"><a href="javascript:fn_loadLoginPage();"><strong>벤처투자종합포털</strong><span>벤처투자 관련 종합정보 서비스 제공</span></a></li>
+                                                    <li class="MBIZ"><a href="javascript:fn_loadLoginPage();"><strong>메인비즈넷</strong><span>메인비즈 인증 신청 및 발급 제공</span></a></li>
+                                                    <li class="EXCT"><a href="javascript:fn_loadLoginPage();"><strong>해외규격인증획득지원센터</strong><span>중소기업에 효율적 인증업무 지원</span></a></li>
+                                                    <li class="CYBR"><a href="javascript:fn_loadLoginPage();"><strong>기술보증기금 사이버영업점</strong><span>온라인 보증신청 제공</span></a></li>
+                                                    <li class="SMBA"><a href="javascript:fn_loadLoginPage();"><strong>중소기업 현황정보시스템</strong><span>중소기업확인서 신청 및 발급 제공</span></a></li>
+                                                    <li class="KBSV"><a href="javascript:fn_loadLoginPage();"><strong>소셜벤처스퀘어</strong><span>기술보증기금 제공</span></a></li>
+                                                    <li class="SIMS"><a href="javascript:fn_loadLoginPage();"><strong>기업마당</strong><span>중소기업 지원정책 정보 제공 </span></a></li>
+                                                    <li class="NGSP"><a href="javascript:fn_loadLoginPage();"><strong>중소벤처기업진흥공단 홈페이지</strong><span>기업 자금 운영지원 정보 제공</span></a></li>
+                                                    <li class="CSR"><a href="javascript:fn_loadLoginPage();"><strong>사회적책임경영시스템</strong><span>사회적책임경영시스템</span></a></li>
+                                                    <li class="GLOB"><a href="javascript:fn_loadLoginPage();"><strong>중소기업해외전시포탈</strong><span>해외전시회 및 수출상담회 정보 제공</span></a></li>
+                                                    </ul>
+                                        </div>
+                                    </dd>
+                            </dl>
+                            <div class="bottom-wrap">
+                                <div class="inner">
+                                     <span>※ 통합 로그인 사이트는 중소벤처기업부에서 운영하는 다양한 서비스를 한번의 로그인으로 쉽고 빠르게 이용할 수 있도록 제공하는 중소벤처기업을 위한 통합 인증서비스 입니다.</span>
+                                     <span>중소벤처24의 회원으로 가입하신 후 자주 찾는 사이트를 등록하실 수 있습니다.</span> <strong>(본 서비스는 해당 사이트에 회원가입 및 본인인증 후 사용하실 수 있습니다.)</strong>
+                                     <span>※ 통합로그인 기능을 원할히 사용하기 위해서는 팝업 차단을 해제해 주셔야 합니다.</span>
+                                     <span>※ 통합로그인 기능을 사용하기 위해서는 로그인을 해주셔야 합니다.</span>
+                                     <span>※ 통합로그인 관련 문의 : (044) 300-0990, (044) 300-0991</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- //통합로그인 -->
+    </div>
+    <!-- //상단 util -->
+    <!-- navigation -->
+    <section class="navigation fl_wrap">
+        <div class="nav-container ">
+            <div class="brand">
+                <h1 class="logo">
+	                <a href="/main"><img src="/main/resources/theme/portal/assets/image/common/logo.png" class="logo_bk" alt="중소벤처24"></a>
+	                </h1>
+            </div>
+            <nav class="fl_left">
+                <!-- nav-list -->
+                <div class="gnb23 motion" id="gnb">
+                    <!-- 20250910 hhlee 검색어 입력이 존재하는 header와 메뉴 위치 맞추기 작업 원복 -->
+                    <ul style="margin-right:202px;">
+                        <li>
+                                    <a href="/main/policyInfoSearchTop" class="depth1">
+                                        지원사업 소개<span class="line"></span>
+                                    </a> <!-- 상위메뉴 -->
+                                    <ul>
+                                        <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/policyInfoSearch" class="depth2">
+                                                                지원사업 소개</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    </ul>
+                                    <li>
+                                    <a href="/main/bizApply" class="depth1">
+                                        공고 조회·신청<span class="line"></span>
+                                    </a> <!-- 상위메뉴 -->
+                                    <ul>
+                                        <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/sportsBsnsPolicy" class="depth2">
+                                                                사업공고</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/pblancHinfo" class="depth2">
+                                                                주택특별공급 사업공고</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/pblancCalendar" class="depth2">
+                                                                사업공고 캘린더</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    </ul>
+                                    <li>
+                                    <a href="/main/applyCertificate" class="depth1">
+                                        증명서 발급<span class="line"></span>
+                                    </a> <!-- 상위메뉴 -->
+                                    <ul>
+                                        <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/applyCertificatePage" class="depth2">
+                                                                발급</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/applyCertificateJudge" class="depth2">
+                                                                발급 진위 확인</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/gov" class="depth2">
+                                                                기타 증명서</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    </ul>
+                                    <li>
+                                    <a href="/main/plcyFnlTop" class="depth1">
+                                        정책금융<span class="line"></span>
+                                    </a> <!-- 상위메뉴 -->
+                                    <ul>
+                                        <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/plcyFnl" class="depth2">
+                                                                 정책금융안내</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    </ul>
+                                    <li>
+                                    <a href="/main/policyInfo" class="depth1">
+                                        더 많은 서비스<span class="line"></span>
+                                    </a> <!-- 상위메뉴 -->
+                                    <ul>
+                                        <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/policyInfoView" class="depth2">
+                                                                더 많은 서비스 전체보기</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/complaintInfo" class="depth2">
+                                                                중소벤처기업부 법정민원신청</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/spcltyCmp" class="depth2">
+                                                                소재부품장비·뿌리기술·전문연구사업자 조회</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/partInfo" class="depth2">
+                                                                유관시스템 둘러보기</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    </ul>
+                                    <li>
+                                    <a href="/main/serviceCenter" class="depth1">
+                                        고객센터<span class="line"></span>
+                                    </a> <!-- 상위메뉴 -->
+                                    <ul>
+                                        <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/ntc" class="depth2">
+                                                                공지사항</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/faq" class="depth2">
+                                                                자주 묻는 질문</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/qna" class="depth2">
+                                                                Q&A</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/guideCall" class="depth2">
+                                                                콜센터 안내</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    <!--상위menuNo와 하위upperMenuNo가 같으면 하위메뉴를 보여준다-->
+                                                        <li>
+                                                            <a href="/main/pollServey" class="depth2">
+                                                                의견수렴</a>
+                                                        </li> <!-- 하위메뉴 -->
+                                                    </ul>
+                                    </ul>
+                    <!-- 검색기능 -->
+                    <div class="gnb_sch23">
+                        <form name="totSearchFrm01" action="/main/totalSrch">
+                            <input type="hidden" name="collection" value="ALL">
+                            <input type="text" name="query" id="search_stot" placeholder="검색어를 입력해주세요" autocomplete="off" title="검색어를 입력해주세요.">
+                            <button type="button" class="btn btn_sch txt_14 totSearchFrm01btn">검색</button>
+                        </form>
+                    </div>
+                    <!--// 검색기능 -->
+                    <div class="gnb-allmenu"><button onclick="nav_toggle_open()">전체메뉴</button></div>
+                        </div>
+                    <div class="navi-bg"><div class="white-bg"></div></div><!-- //nav-list -->
+            
+                <!-- 모바일 토글 메뉴 -->
+                <div class="nav-mobile">
+                    <button class="nav_toggle" onclick="nav_toggle_open()"><span></span></button>
+                </div>
+
+                <!-- mo_navi start -->
+                <div class="mo_navi">
+                	<div class="mo_navi_top">
+                		<button class="close_mo_navi"><span></span></button>
+                		<p class="mo_navi_welcome">중소벤처24에 오신걸 환영합니다</p>
+                      			<div class="login_btn_group">
+                                  	<a class="btn blue" href="/main/mber/login" class="util_login">로그인</a>
+                                  	<a class="btn blue header-site" href="javascript:void(0);" >통합로그인</a></li>
+               						<a href="/main/mber/selectMemberType" class="util_join">회원가입</a>
+               					</div>
+                              <form name="totSearchFrm02" id="totSearchFrm02" action="/main/totalSrch">
+	                         <div class="search-element">
+				                <div class="board-search-wrap main-search-wrap">
+			                		<label>검색영역</label>
+			                		<input type="hidden" name="collection" value="ALL">
+				                    <div class="inp_wrap"><input id="skeword" type="text" name="query" title="검색" class="inp" autocomplete="off"  placeholder="검색어를 입력해주세요"></div>
+				                    <button id="srchBtn" type="button" onclick="fn_totSearchFrm02();">검색</button>
+				                </div>
+			                </div>
+		                </form>
+		                <div class="mid_link">
+		                	<a href="/main/portalIntro">중소벤처24 소개</a>
+                            <a href="/main/useHelp">처음오셨나요?</a>
+		                </div>
+                	</div>
+                	<div class="mo_navi_bottom">
+                		<div class="mo_navi_left_wrap"></div>
+                		<!--모바일 메뉴 영역 -->
+	                    <div class="m_nav-list">
+
+	                        <!-- <a name="gnb"></a>  20220427 - 상단메뉴 바로가기 링크 추가 / 20240701 신예리 주석-->
+	                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                        <div class="m_menu ">
+                                            <span><a href="javascript:void(0);">지원사업 소개</a></span>
+	                                <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 최상위 메뉴인경우 -->
+	                                            <div class="nav_area">
+	                                            	<p class="nav_menu_tit">지원사업 소개</p>
+	                                                <div class="nav_menu">
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/policyInfoSearch">지원사업 소개</a>
+	                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+	                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+	                                            </div></div></div>
+	                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                        <div class="m_menu on">
+                                            <span><a href="javascript:void(0);">공고 조회·신청</a></span>
+	                                <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 최상위 메뉴인경우 -->
+	                                            <div class="nav_area">
+	                                            	<p class="nav_menu_tit">공고 조회·신청</p>
+	                                                <div class="nav_menu">
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class="on nav_menu_2depth" href="/main/sportsBsnsPolicy">사업공고</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/pblancHinfo">주택특별공급 사업공고</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/pblancCalendar">사업공고 캘린더</a>
+	                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+	                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+	                                            </div></div></div>
+	                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                        <div class="m_menu ">
+                                            <span><a href="javascript:void(0);">증명서 발급</a></span>
+	                                <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 최상위 메뉴인경우 -->
+	                                            <div class="nav_area">
+	                                            	<p class="nav_menu_tit">증명서 발급</p>
+	                                                <div class="nav_menu">
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/applyCertificatePage">발급</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/applyCertificateJudge">발급 진위 확인</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/gov">기타 증명서</a>
+	                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+	                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+	                                            </div></div></div>
+	                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                        <div class="m_menu ">
+                                            <span><a href="javascript:void(0);">정책금융</a></span>
+	                                <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 최상위 메뉴인경우 -->
+	                                            <div class="nav_area">
+	                                            	<p class="nav_menu_tit">정책금융</p>
+	                                                <div class="nav_menu">
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/plcyFnl"> 정책금융안내</a>
+	                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+	                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+	                                            </div></div></div>
+	                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                        <div class="m_menu ">
+                                            <span><a href="javascript:void(0);">더 많은 서비스</a></span>
+	                                <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 최상위 메뉴인경우 -->
+	                                            <div class="nav_area">
+	                                            	<p class="nav_menu_tit">더 많은 서비스</p>
+	                                                <div class="nav_menu">
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/policyInfoView">더 많은 서비스 전체보기</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/complaintInfo">중소벤처기업부 법정민원신청</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/spcltyCmp">소재부품장비·뿌리기술·전문연구사업자 조회</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/partInfo">유관시스템 둘러보기</a>
+	                                        <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="/main/em">기업가정신</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/poll" target="_blank">중소기업 수위탁거래종합포털</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/csr/index.do" target="_blank">CSR 사회적 책임경영</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/mna/index.do" target="_blank">M&A 정보망</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/bizlink" target="_blank">비즈니스지원단</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/cobiz/" target="_blank">COBIZ 협업정보시스템</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/gsmb/" target="_blank">참괜찮은강소기업플랫폼</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/sanhakin/" target="_blank">인력지원사업 종합관리시스템</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/binet" target="_blank">창업보육센터 네트워크시스템</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/sme-expo/" target="_blank">SOEP 중소기업 해외전시포탈</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/pis/main/index.do" target="_blank">납품대금 연동제 시스템</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/globalcerti/" target="_blank">해외규격인증획득지원시스템</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/mainbiz" target="_blank">메인비즈넷</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/exvc/" target="_blank">수출바우처사업지원시스템</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/exportcenter/" target="_blank">중소기업수출지원센터</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_3depth" href="https://www.smes.go.kr/venturein" target="_blank">벤처확인종합관리시스템</a>
+	                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+	                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+	                                            </div></div></div>
+	                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                        <div class="m_menu ">
+                                            <span><a href="javascript:void(0);">고객센터</a></span>
+	                                <!-- 다음이 서브 메뉴일 경우 -->
+	                                        <!-- 최상위 메뉴인경우 -->
+	                                            <div class="nav_area">
+	                                            	<p class="nav_menu_tit">고객센터</p>
+	                                                <div class="nav_menu">
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/ntc">공지사항</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/faq">자주 묻는 질문</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/qna">Q&A</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/guideCall">콜센터 안내</a>
+	                                        <!-- 하위 메뉴인경우 -->
+                                        <a class=" nav_menu_2depth" href="/main/pollServey">의견수렴</a>
+	                                        <!-- 마지막 메뉴일 경우 : 닫기(~2레벨) -->
+	                                        <!-- 최상위 메뉴가 아닌경우 -->
+	                                            </div></div></div>
+	                                        </div>
+                	</div>
+                </div>
+                <!-- mo_navi end -->
+
+                <div class="nav_toggle_sidebar" style="display:none" id="mySidebar">
+
+                    <div class="sidebar_util_area fl_wrap">
+                        <ul class="sidebar_util_member fl_wrap">
+                            <li><a href="/main/mber/login" class="util_login">로그인</a></li>
+                                    <li><a href="/main/mber/selectMemberType" class="util_join">회원가입</a></li>
+                                </ul>
+                        <ul class="sidebar_util_info fl_wrap">
+                            <li><a href="/main/portalIntro">중소벤처24 소개</a></li>
+                            <li><a href="/main/useHelp">처음 오셨나요?</a></li>
+                        </ul>
+                    </div>
+
+                    <button onclick="nav_toggle_close()" class="btn_toggle_close fl_right">Close</button>
+                    <div class="m_gnb_sch">
+                        <div class="gnb_sch btn_wrap">
+                            <!--검색 구간-->
+                            <form name="totSearchFrm02" id="totSearchFrm02" action="/main/totalSrch">
+                                <fieldset>
+                                    <legend>검색영역</legend>
+		                            <input type="hidden" name="collection" value="ALL">
+		                            <input type="text" name="query" id="search" placeholder="검색어를 입력해주세요" autocomplete="off" title="검색어를 입력해주세요.">
+                                    <span class="btn_zoom fl_left"><button class="btn btn_sch" onclick="fn_totSearchFrm02();">검색</button></span>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="m_nav-list">
+                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                    <div class="m_menu">
+                                        <span><a href="/main/policyInfoSearchTop">지원사업 소개</a></span>
+                                <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 최상위 메뉴인경우 -->
+                                            <div class="nav_area">
+                                                <div class="nav_menu">
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/policyInfoSearch">지원사업 소개</a>
+                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+                                            </div></div></div>
+                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                    <div class="m_menu">
+                                        <span><a href="/main/bizApply">공고 조회·신청</a></span>
+                                <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 최상위 메뉴인경우 -->
+                                            <div class="nav_area">
+                                                <div class="nav_menu">
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/sportsBsnsPolicy">사업공고</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/pblancHinfo">주택특별공급 사업공고</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/pblancCalendar">사업공고 캘린더</a>
+                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+                                            </div></div></div>
+                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                    <div class="m_menu">
+                                        <span><a href="/main/applyCertificate">증명서 발급</a></span>
+                                <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 최상위 메뉴인경우 -->
+                                            <div class="nav_area">
+                                                <div class="nav_menu">
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/applyCertificatePage">발급</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/applyCertificateJudge">발급 진위 확인</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/gov">기타 증명서</a>
+                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+                                            </div></div></div>
+                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                    <div class="m_menu">
+                                        <span><a href="/main/plcyFnlTop">정책금융</a></span>
+                                <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 최상위 메뉴인경우 -->
+                                            <div class="nav_area">
+                                                <div class="nav_menu">
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/plcyFnl"> 정책금융안내</a>
+                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+                                            </div></div></div>
+                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                    <div class="m_menu">
+                                        <span><a href="/main/policyInfo">더 많은 서비스</a></span>
+                                <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 최상위 메뉴인경우 -->
+                                            <div class="nav_area">
+                                                <div class="nav_menu">
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/policyInfoView">더 많은 서비스 전체보기</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/complaintInfo">중소벤처기업부 법정민원신청</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/spcltyCmp">소재부품장비·뿌리기술·전문연구사업자 조회</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/partInfo">유관시스템 둘러보기</a>
+                                        <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="/main/em">기업가정신</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/poll" target="_blank">중소기업 수위탁거래종합포털</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/csr/index.do" target="_blank">CSR 사회적 책임경영</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/mna/index.do" target="_blank">M&A 정보망</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/bizlink" target="_blank">비즈니스지원단</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/cobiz/" target="_blank">COBIZ 협업정보시스템</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/gsmb/" target="_blank">참괜찮은강소기업플랫폼</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/sanhakin/" target="_blank">인력지원사업 종합관리시스템</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/binet" target="_blank">창업보육센터 네트워크시스템</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/sme-expo/" target="_blank">SOEP 중소기업 해외전시포탈</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/pis/main/index.do" target="_blank">납품대금 연동제 시스템</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/globalcerti/" target="_blank">해외규격인증획득지원시스템</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/mainbiz" target="_blank">메인비즈넷</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/exvc/" target="_blank">수출바우처사업지원시스템</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/exportcenter/" target="_blank">중소기업수출지원센터</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_3depth" href="https://www.smes.go.kr/venturein" target="_blank">벤처확인종합관리시스템</a>
+                                        <!-- 다음이 상위 메뉴일 경우 : 닫기 -->
+                                        <!-- 다음메뉴가 GNB 메뉴인경우 -->
+                                            </div></div></div>
+                                        <!-- 최상위 메뉴인 경우(2 level) -->
+                                    <div class="m_menu">
+                                        <span><a href="/main/serviceCenter">고객센터</a></span>
+                                <!-- 다음이 서브 메뉴일 경우 -->
+                                        <!-- 최상위 메뉴인경우 -->
+                                            <div class="nav_area">
+                                                <div class="nav_menu">
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/ntc">공지사항</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/faq">자주 묻는 질문</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/qna">Q&A</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/guideCall">콜센터 안내</a>
+                                        <!-- 하위 메뉴인경우 -->
+                                    <a class="nav_menu_2depth" href="/main/pollServey">의견수렴</a>
+                                        <!-- 마지막 메뉴일 경우 : 닫기(~2레벨) -->
+                                        <!-- 최상위 메뉴가 아닌경우 -->
+                                            </div></div></div>
+                                        </div>
+                </div>
+                <!-- /모바일 토글 메뉴 -->
+                </nav>
+                <!-- nav-list -->
+
+
+</div>
+    </section>
+    <!-- //navigation -->
+</header>
+<!-- //header -->
+
+<!-- 연계사이트 이동 시 전달 값 -->
+<form id="reqSiteFrm" name="reqSiteFrm" method="post">
+    <input type="hidden" name="bizno" value=""/>
+    <input type="hidden" name="ci" value=""/>
+    <input type="hidden" name="name" value=""/>
+    <input type="hidden" name="email" value=""/>
+    <input type="hidden" name="hp" value=""/>
+</form>
+        <!-- end:header -->
+        <!-- start:content -->
+
+        <div class="normal-wrap normal-wrap-ai">
+                    <script>
+	
+	$(document).ready(function (){
+		if(false){
+			$('a:contains("비밀번호 수정")').css("display","none");
+			$('a:contains("비밀번호 수정")').parent().css("display","none");
+			$('a:contains("인증수단 재설정")').css("display","none");
+			$('a:contains("인증수단 재설정")').parent().css("display","none");
+
+		}
+	})
+</script>
+<div class="lnb">
+    <h2>공고 조회·신청</h2>
+    <ul>
+    	<li class="on choose">
+				<a href="/main/sportsBsnsPolicy" target="_self" id="413">사업공고</a></li>
+						<li class="on">
+				<a href="/main/pblancHinfo" target="_self" id="411">주택특별공급 사업공고</a></li>
+						<li class="on">
+				<a href="/main/pblancCalendar" target="_self" id="428">사업공고 캘린더</a></li>
+						</ul>
+</div>
+<div class="article" id="contents">
+                        <ul class="loc-list">
+                            <li>Home</li><li>공고 조회·신청</li><li>사업공고</li></ul>
+                        <div class="article-header">
+                            <h3>사업공고</h3>
+                           </div> <!-- //article-header -->
+                        <!-- // article_nav -->
+            <script type="text/javascript" src="/main/user/js/log.js;jsessionid=2DA16313250F0768D16B72C83BAC3144?22022403"></script>
+<script>
+$(document).ready(function(){
+	//alert("");
+	$("#applicantName").on("change keyup paste", function(){
+		//alert($(this).val());
+		$(".signature>.name>span").text($(this).val());
+	});
+
+    $('input[name="pondDt"]').datepicker({
+    	dateFormat: "yy-mm-dd"
+   	});
+
+    var url = 'https://www.smes.go.kr/epaper/view/sd;streamdocsId=72059369158342400'
+    // 20251119 hhlee pdf 뷰어는 1페이지가 우선적으로 표시되도록 변경
+    url = url + ";currentPage=1";
+    var blobMe = URL['createObjectURL'](new Blob([''], {type: 'text/html'}));
+    var elIframe = document['createElement']('iframe');
+    elIframe['setAttribute']('width', '100%');
+    if(IS_MOBILE) {
+        elIframe['setAttribute']('height', '500px');
+    } else {
+        elIframe['setAttribute']('height', '1200px');
+    }
+    elIframe['setAttribute']('src', blobMe);
+    elIframe['setAttribute']('title', 'iframe');
+    var idOne = 'gepa_'+Date.now();
+    elIframe['setAttribute']('id', idOne);
+    if(document.getElementById('viewer') != null){
+        document.getElementById('viewer').appendChild(elIframe);
+        const iframeHere = url;
+        console.log(iframeHere);
+        document['getElementById'](idOne)['contentWindow']['document'].write('<script type="text/javascript">location.href = "' + iframeHere + '";\x3c/script>');
+    }
+});
+
+function fn_newWindow(cntcInsttCd, pblancId, reqstSite){
+
+    let page = $("#reqstLinkInfo").val();
+
+
+    if (cntcInsttCd != "BI13") {
+        page = page.replaceAll(/[\&]/gi, "|");
+    }
+
+	if(IS_MOBILE){
+		alert("모바일에서는 지원하지 않는 기능입니다.")
+		return;
+	}
+	
+	if(reqstSite == "DRCT"){
+		if("" == "" || null == ""){
+			if( !confirm("회원 로그인 후 해당 서비스를 이용하실 수 있습니다.\n로그인 페이지로 이동하시겠습니까?")){ 
+				return;
+			}else{
+				$.ajax({
+					type : "post",
+					url: '/main/mber/ajaxLogout',
+					dataType: 'text', //전송받을 데이터의 타입
+					contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+					success: function(data) {
+						location.href="/main/mber/login?mberTy=A102";
+					},
+					error: function(data, status, err) {
+						location.href="/main/mber/login?mberTy=A102";
+					}
+				});
+			}
+		}else{
+			if(""=="A101"){
+				alert("기업회원만 신청가능합니다.");
+				return;
+			}else{
+				//seektw 추가 2022-03-23 지원사업공고 신청 로그 추가
+				setStatLog("LS00","LS01","");
+				if("" == "신청완료"){
+					$("#include_popup4").addClass("on");
+				}else{
+					$("#include_popup1").addClass("on");
+					requestAnimationFrame(function() {
+			            $("#include_popup1 .pop-header > a").focus();
+			        });
+				}
+			}
+		}
+	}else{
+		if(page != null){
+			if("" == "" || null == ""){
+				if( !confirm("회원 로그인 후 해당 서비스를 이용하실 수 있습니다.\n로그인 페이지로 이동하시겠습니까?")){ 
+					return;
+				}else{
+					$.ajax({
+						type : "post",
+						url: '/main/mber/ajaxLogout',
+						dataType: 'text', //전송받을 데이터의 타입
+						contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+						success: function(data) {
+							location.href="/main/mber/login?mberTy=A101";
+						},
+						error: function(data, status, err) {
+							location.href="/main/mber/login?mberTy=A101";
+						}
+					});
+				}
+			} else {
+				//seektw 추가 2022-03-23 지원사업공고 신청 로그 추가
+                setStatLog("LS00","LS01","");
+
+                //260408_판판대로 개인회원 로그인 후 신청클릭 시 접근 제한(기업회원만 가능하기 때문)
+                if(cntcInsttCd == "BI07" && "" == "A101"){
+                    alert("해당 사업 신청은 기업회원만 가능합니다. 기업회원 로그인 후 다시 시도해 주세요.");
+                    return;
+                }
+				
+				switch(cntcInsttCd){
+					case "BI01":	//SMTECH
+						//page = "/magicsso/requestAuthEx.jsp?RelayState=https://www.smtech.go.kr/front/magicsso/requestConnect.jsp?RelayState=/front/log/ssoOuterLogin.do?p=/smes.html|" + page;
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.smtech.go.kr/front/magicsso/requestConnect.jsp?RelayState=/front/log/ssoOuterLogin.do?p=/smes.html|/front/SBA/SA/SbjtAppl_selectSbjtAncmList.do|sNm="+page;
+						var textObj = {};
+				        
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">SMTECH 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>- 과제 신청 시 대표자, 과제 책임자는 반드시 사전에 회원가입이 되어 있어야 합니다.</li></ul></li><li>기관등록 확인<ul class="nor-list03" style="padding-left:20px"><li>- 과제를 수행하는 모든 기관은 과제 신청 전 기관등록이 되어 있어야 합니다.</li></ul></li><li>참여제한 확인<ul class="nor-list03" style="padding-left:20px"><li>- 과제 수행하는 기관 및 구성원이 정부출연사업 참여제한에 해당하는 경우 정상적으로 과제 접수를 하지 못할 수 있습니다.</li></ul></li><li>제출서류 작성<ul class="nor-list03" style="padding-left:20px"><li>- 신청하려는 사업에 따라 과제 신청 시 제출되어야 하는 서류가 있습니다. 미리 확인하시고 작성하시면 편리합니다.</li></ul></li><li>과제참여자 동의<ul class="nor-list03" style="padding-left:20px"><li>- 과제 신청 시 과제에 참여하는 모든 구성원은 과제 신청 동의서 작성을 하셔야 합니다.</li></ul></li> </ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(SMTECH로 이동)"
+						textObj.btnHref2 = "https://smtech.go.kr/front/log/member.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+					case "BI02":	//K-STARTUP
+						page = page.replace("https://www.k-startup.go.kr", "");
+						page = page.split("&").join("|");
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.k-startup.go.kr/magicsso/requestConnect.jsp?RelayState=/magicsso/SSOLogin.do?p=/applyframe.html|"+page;
+						//window.open(page);
+						
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">K-Startup 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>K-Startup 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(k-startup으로 이동)"
+// 						textObj.btnHref2 = "https://www.k-startup.go.kr/home/login/memberJoinView.do?mid=30036"
+                        textObj.btnHref2 = "https://www.k-startup.go.kr/web/contents/webMEMB_JOIN.do"
+						fn_include_popOpen3(textObj, this);
+						
+						break;
+					case "BI03":	//SMART FACTORY
+						var details = page.split("|").map(function(e){
+								var tmp = e.split(":");
+								return {
+									nm:tmp[0] || '',
+									key:tmp[1] || ''
+								}
+							});
+	
+						//page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.smart-factory.kr/magicsso/requestConnect.jsp?RelayState=/?p=/smes/applyframe.html|/receipt/taskReqst|sNm=";
+						page = "/main/magicsso/requestAuthEx.jsp?RelayState=https://www.smart-factory.kr/magicsso/requestConnect.jsp?RelayState=/connApi/connClient.jsp?RelayState=/usr/bm/tr/tr/smsDspth";
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">스마트공장 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>- 기업 내 최초 가입자는 컨텍센터(1644-1736)으로 연락하시어, 도입기업 또는 공급기업 권한을 요청하셔야 합니다.</li><li>- 최초 가입자 권한 부여 이후 가입하시는 분들은 최초 가입자에게 권한 부여를 요청하시면 됩니다.</li><li>* 위 권한이 불충분 할 경우, "접근권한이 불충분 합니다"라는 사유로 사업신청이 안될 수 있습니다.</li></ul></li><li>과제신청 시<ul class="nor-list03" style="padding-left:20px"><li>- 오프라인으로 컨소시엄 구성 \'완료\'시 (도입/공급)</li><li>- 공급기업 과제정보 등록 (과제기본 정보, 사업계획서 등)</li><li>- 도입기업 신청정보(공급기업이 제출한) 확인</li><li>- 도입기업 과제신청<br>* 일부 사업은 해당 프로세스가 상이할 수 있습니다. </li></ul></li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(스마트공장 사이트로 이동)"
+						//textObj.btnHref2 = "https://www.smart-factory.kr/member/join"
+						textObj.btnHref2 = "https://www.smart-factory.kr/usr/ma/ma/ma/ms/mberSbscrbMain"
+						fn_include_popOpenSF3(textObj, details, this);
+						
+						break;
+					case "BI04":	//소상공인24
+						//window.open(page);
+						var url = "sbiz.or.kr";
+						var idx = page.indexOf(url);
+						var proto = (page.indexOf("https") > -1) ? "https" : "http";
+						if(idx>-1)page = page.substr(idx+url.length);
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://sso.sbiz.or.kr/magicsso/requestConnect.jsp?RelayState=/sso/agentLoginAction.do?p="+proto+"://www.sbiz24.kr/#//smes.html|" + page;
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">소상공인 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>소상공인24 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(소상공인24 사이트로 이동)"
+						textObj.btnHref2 = "https://sso.sbiz.or.kr/sup/cmm/member/personal_clause.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+					case "BI90":
+					case "BI05":	//중소벤처기업진흥공단
+						page = page.substr(page.indexOf("kosmes.or.kr") + "kosmes.or.kr".length);
+						//page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=http://www.kosmes.or.kr/magicsso/requestConnect.jsp?RelayState=/SHMMB003.do?p=/smes.html|"+page;
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=http://www.kosmes.or.kr/magicsso/requestConnect.jsp?RelayState=/SHMMB003.do?p="+page;
+						//window.open(page);
+						
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">중소벤처기업진흥공단 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>중소벤처기업진흥공단 홈페이지에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						if(pblancId != "PLFD00") textObj.text += "<br>또한 해당 공고는 기업회원만 신청 가능합니다.";					
+						
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(중진공 사이트로 이동)"
+						textObj.btnHref2 = "https://kosmes.or.kr/sbc/SH/MMB/SHMMB016M0.do"
+						fn_include_popOpen3(textObj, this);
+						
+						break;
+					case "BI06":	//기보
+						//page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://cyber.kibo.or.kr/magicsso/requestConnect.jsp?RelayState=/org/kibo/cbr/mp/CBRMPSSOM0.jsp";
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.kibo.or.kr/magicsso/requestConnect.jsp?RelayState=/org/kibo/cbr/mp/CBRMPSSOM0.jsp";
+						page += "?p=/org/kibo/cbr/tg/smes.html|/org/kibo/cbr/tg/CBRTG100M4.jsp";
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">기술보증기금 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>기술보증기금 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(기술보증기금 사이트로 이동)"
+						//textObj.btnHref2 = "https://cyber.kibo.or.kr/org/kibo/cbr/mp/CBRMP400M2.jsp"
+						textObj.btnHref2 = "https://www.kibo.or.kr/dbranch/mbrSctChoose.do"
+						fn_include_popOpen1(textObj, this);
+						break;
+						
+					case "BI07":	//imstars
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://fanfandaero.kr/magicsso/requestConnect.jsp?RelayState="+page;
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">판판대로 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>판판대로 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(판판대로 사이트로 이동)"
+						textObj.btnHref2 = "https://fanfandaero.kr/portal/termCompany.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+					
+					case "BI08":	//울타리
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.ultari.go.kr/magicsso/requestConnect.jsp?RelayState="+page;
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">울타리 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>울타리 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(울타리 사이트로 이동)"
+						textObj.btnHref2 = "https://www.ultari.go.kr/portal/ptu/membType.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+						
+					case "BI09":	//인력지원
+					    //page = page.replace("|", "&");
+						console.log("1.page :: "+page);
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.smes.go.kr/sanhakin/magicsso/requestConnect.jsp?RelayState="+page;
+						console.log("2.page :: "+page);
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">인력지원 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>인력지원 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(인력지원 사이트로 이동)"
+						textObj.btnHref2 = "https://www.smes.go.kr/sanhakin/websquare/wq_smesMbrJoin.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+
+					case "BI10":	//해외전시포탈
+						//page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.smes.go.kr/sme-expo/magicsso/requestConnect.jsp?RelayState="+page;
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState="+page;
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">해외전시포탈 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>해외전시포탈 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(해외전시포탈 사이트로 이동)"
+						textObj.btnHref2 = "https://www.smes.go.kr/sme-expo/site/main/member/joinStep1.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+						
+					case "BI11":	//cobiz
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.smes.go.kr/cobiz/magicsso/requestConnect.jsp?RelayState="+page;
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">cobiz 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>cobiz 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(cobiz 사이트로 이동)"
+						textObj.btnHref2 = "https://www.smes.go.kr/cobiz/102"
+						fn_include_popOpen3(textObj, this);
+						break;
+						
+					case "BI12":	//수출지원센터
+						//page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.exportcenter.go.kr/magicsso/requestConnect.jsp?RelayState="+page;
+						page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.smes.go.kr/exportcenter/magicsso/requestConnect.jsp?RelayState="+page;
+						//window.open(page);
+						var textObj = {};
+						textObj.text = '<p><strong style="font-size:17px;color:#0e457a">수출지원센터 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>수출지원센터 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+						textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+						textObj.btnHref1 = page
+						textObj.btnTxt2 = "가입하겠습니다<br>(수출지원센터 사이트로 이동)"
+						//textObj.btnHref2 = "https://www.exportcenter.go.kr/member/regist_stipul.jsp"
+						textObj.btnHref2 = "https://www.smes.go.kr/exportcenter/account/join/agree.do"
+						fn_include_popOpen3(textObj, this);
+						break;
+
+                    case "BI13":	//IRIS
+                        /*page = page == null ? "" : page;
+                        const pTxt = "param1="
+                        const returnUrl = page.substr(page.indexOf(pTxt) + pTxt.length);*/
+                        page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://www.iris.go.kr/magicsso/requestConnect.jsp?RelayState=/lgin/lginadmn/indexTipaSSO.do?RETURN_URL="+page;
+                        //window.open(page);
+                        var textObj = {};
+                        textObj.text = '<p><strong style="font-size:17px;color:#0e457a">IRIS 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>IRIS 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+                        textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+                        textObj.btnHref1 = page
+                        textObj.btnTxt2 = "가입하겠습니다<br>(IRIS 사이트로 이동)"
+                        //textObj.btnHref2 = "https://www.iris.go.kr/mbrs/entr/retrievePrvcClctCsntListView.do"
+                        textObj.btnHref2 = "https://www.iris.go.kr/mbrs/entr/retrievePrvcClctCsntMobileView.do"
+                        fn_include_popOpen3(textObj, this);
+                        break;
+                    case "BI14":    //소셜벤처스퀘어
+                        page = "/main/magicsso/requestAuthEx.jsp?WT=B&RelayState=https://sv.kibo.or.kr/magicsso/requestConnect.jsp?RelayState="+page;
+                        var textObj = {};
+                        textObj.text = '<p><strong style="font-size:17px;color:#0e457a">소셜벤처스퀘어 과제 신청을 위한 사전 준비사항을 확인해주세요.</strong></p><ul class="nor-list02"><li>회원가입 확인<ul class="nor-list03" style="padding-left:20px"><li>소셜벤처스퀘어 사이트에 회원가입 및 실명인증이 되어 있어야 사업신청이 가능합니다.</li></ul>';
+                        textObj.btnTxt1 = "이미 가입을 완료했습니다<br>(신청하기)"
+                        textObj.btnHref1 = page
+                        textObj.btnTxt2 = "가입하겠습니다<br>(소셜벤처스퀘어 사이트로 이동)"
+                        textObj.btnHref2 = "https://sv.kibo.or.kr/JoinInfo.do"
+                        fn_include_popOpen3(textObj, this);
+                        break;
+
+					default:
+						break;
+				}
+			}
+		}
+	}
+}
+
+function test(){
+	if("" == "신청완료"){
+		$("#include_popup4").addClass("on");
+	}else{
+		$("#include_popup1").addClass("on");
+	}
+}
+
+function fn_include_popOpen1(o, parent){
+    $(o).addClass("on");
+    
+    setTimeout(function() {
+    	$(o).find('.btn-wrap > a:first-of-type').focus();
+    }, 100);
+    
+    const closeButton = $(o).find('.pop-header > a')[0];
+    requestAnimationFrame(() => forceFocus(closeButton));
+    
+    // data-focus 속성 추가(신청 버튼에)
+    $(".btn-wrap > a").filter(function() {
+        return $(this).text() === '신청';
+    }).attr("data-focus", "on");
+    
+}
+
+function fn_include_popClose1(){
+    $("#include_popup1").removeClass("on");
+    
+    // 신청 버튼으로 포커스 이동
+    requestAnimationFrame(function() {
+        $(".btn-wrap > a").filter(function() {
+            return $(this).text() === '신청';
+        }).focus();    	
+    })
+}
+
+function fn_include_popOpen2(o, parent){
+    if($("#radio01").is(":checked")){
+    	$("#include_popup2").addClass("on");
+        $("#include_popup1").removeClass("on");
+        
+        // popup2 닫기 버튼에 포커스 이동
+	    requestAnimationFrame(function() {
+	        $("#include_popup2 .pop-header > a").focus();
+	    });
+        
+        $(parent).attr("data-focus", "on");
+        
+    }else{
+        alert("개인정보의 수집 및 이용에 동의해 주세요.");
+    }
+    
+}
+
+function fn_include_popClose2(){
+    $("#include_popup2").removeClass("on");
+    
+    // popup1의 버튼에 포커스 이동
+    requestAnimationFrame(function() {
+        $(".btn-wrap > a").filter(function() {
+            return $(this).text() === '신청';
+        }).focus();     
+    })
+}
+
+function fn_include_popOpen3(textObj, parent){
+	$("#pop_text").html(textObj.text);
+	$("#btn_pop_req").html(textObj.btnTxt1);
+	$("#btn_pop_req").attr("href", encodeURI(textObj.btnHref1));
+	$("#btn_pop_req").attr("onclick", "fn_include_popClose3();");
+	$("#btn_pop_req").attr("target", "_blank");
+	$("#btn_pop_url").html(textObj.btnTxt2);
+	$("#btn_pop_url").attr("href", textObj.btnHref2);
+	$("#btn_pop_url").attr("title", "새창열림");
+	$("#include_popup3").addClass("on");
+	
+	$("#include_popup3").find('.btn-wrap > a:first-of-type').focus();
+	
+    $(".btn-wrap > a").filter(function() {
+    	return $(this).text() === '신청';
+    }).attr("data-focus", "on");
+	
+	$("#btn_pop_req").show();
+	$("#sf_table").hide();
+}
+function fn_include_popClose3(){
+	$("#include_popup3").removeClass("on");
+	
+    $("a[data-focus~=on]").focus();
+    $("a[data-focus~=on]").attr("data-focus", "off");
+}
+
+function fn_include_popOpenSF3(textObj, detailList, parent){
+	$("#pop_text").html(textObj.text);
+	//$("#btn_pop_req").hide();
+	$("#btn_pop_req").html(textObj.btnTxt1);
+	$("#btn_pop_req").attr("href", "javascript:void(0)");
+	$("#btn_pop_req").attr("onclick", "fn_sfAppl();");
+	$("#btn_pop_req").attr("target", "");
+	$("#btn_pop_url").html(textObj.btnTxt2);
+	$("#btn_pop_url").attr("href", textObj.btnHref2);
+	$("#include_popup3").addClass("on");
+	
+	$("#sf_table").show();
+	var htmlTxt = ''
+	detailList.forEach(function(d, i){
+		htmlTxt += '<tr><td><input type="radio" name="sf_radio" value="'+encodeURI(textObj.btnHref1)+d.key+'" ' + (i==0?'checked':'')+'></td>';
+		htmlTxt += '<td>' + d.nm + '</td></tr>';
+	})
+	$("#sf_detail").html(htmlTxt);
+	
+	$("#include_popup3").find('.btn-wrap > a:first-of-type').focus();
+	$(".btn-wrap > a").filter(function() {
+        return $(this).text() === '신청';
+    }).attr("data-focus", "on");
+}
+
+function fn_sfAppl(){
+	var radioValue = $("input[name='sf_radio']:checked").val();
+	if(radioValue){
+	    window.open(radioValue)
+	}
+	fn_include_popClose3();
+}
+
+function fn_include_popClose4(){
+	$("#include_popup4").removeClass("on");
+}
+
+
+
+function back(){
+
+    /*20221018변경 if(""=="Y"){
+		history.back(-1);
+	}else */{
+		location.href="/main/sportsBsnsPolicy"
+	}
+	
+}
+
+function fn_scrap(pblancSeq, intlChk){
+    if("" == "" || null == ""){
+        if( !confirm("회원 로그인 후 해당 서비스를 이용하실 수 있습니다.\n로그인 페이지로 이동하시겠습니까?")){
+            return;
+        }else{
+            $.ajax({
+                type : "post",
+                url: '/main/mber/ajaxLogout',
+                dataType: 'text', //전송받을 데이터의 타입
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                success: function(data) {
+                    location.href="/main/mber/login?mberTy=A101";
+                },
+                error: function(data, status, err) {
+                    location.href="/main/mber/login?mberTy=A101";
+                }
+            });
+        }
+    }else{
+        if(!confirm("관심공고로 등록 하시겠습니까?")){
+            return;
+        }else{
+            $.ajax({
+                type : "post",
+                url: '/main/fnct/policyInfoSearch/scrap',
+                data: {
+                    policyId : pblancSeq,
+                    policyType : "pblanc",
+                    intlChk : intlChk,
+                },
+                success: function(data) {
+                    alert(data);
+                    location.reload();
+                }
+            });
+        }
+    }
+}
+// 관심공고로 삭제
+function delPblanc(pblancId){
+    if(confirm("삭제하시겠습니까?")){
+        $("#pblancId").val(pblancId);
+        $("#srchFrm").attr("action", "/main/sportsBsnsPolicy/delPblanc").submit();
+    }else{
+        return;
+    }
+}
+// 관심공고로 설정/해제
+function pblancSet(pblancId, scrapUseYn){
+    var mbrId = "";
+    var cmpId = "";
+    var confirmMsg = "";
+    var returnMsg = "";
+
+    if("" == "A101"){
+        mbrId = "";
+        cmpId = "XXX";
+    }else if("" == "A102"){
+        mbrId = "";
+        cmpId = "";
+    }
+
+    if(scrapUseYn == 'Y') {
+        confirmMsg = "관심공고를 등록하시겠습니까?";
+        returnMsg = "관심공고가 등록되었습니다.";
+    }else{
+        confirmMsg = "관심공고를 해제하시겠습니까?";
+        returnMsg = "관심공고가 해제되었습니다.";
+    }
+
+    if(confirm(confirmMsg)){
+        $.ajax({
+            url: '/main/fnct/sportsBsnsPolicy/pblancSet',
+            data : {
+                mbrId : mbrId,
+                cmpId : cmpId,
+                scrapUseYn : scrapUseYn,
+                pblancId : pblancId,
+                message : returnMsg
+            },
+            type : 'POST',
+            success: function(data) {
+            	alert(data);
+                location.reload();
+            }
+       });
+    }
+}
+
+function ghrgprLoad(){
+	if($("#load").is(":checked")){
+		$.ajax({
+			type : "post",
+			url: '/main/fnct/sportsBsnsPolicy/ghrgprLoad',
+			data: {cmpId : ""},
+			success: function(data) {
+				
+				$("#applicantId").val(data.indvlMbrId);
+				$("#applicantName").val(data.chrgprNm);
+				$("#department").val(data.chrgprDeptNm);
+				$("#eMail").val(data.chrgprEmailAddr);
+				
+				var phoneNumber = "";
+				phoneNumber = data.chrgprMbphno;
+				
+				var phone = phoneNumber.substring(0,3);
+				
+				if(phoneNumber.length == 11){
+					var phone1 = phoneNumber.substring(3,7);
+					var phone2 = phoneNumber.substring(7,11);
+				}else{
+					var phone1 = phoneNumber.substring(3,6);
+					var phone2 = phoneNumber.substring(6,10);
+				}
+				$("#phone").val(phone);
+				$("#phone1").val(phone1);
+				$("#phone2").val(phone2);
+				$(".signature>.name>span").text(data.chrgprNm);
+				
+			}
+		});
+	}else{
+		$("#ghrgprInfo").find("*").not("#phone>option").val("");
+	}
+}
+
+function goIntlEvent(type, pblancSeq) {
+    $.ajax({
+        url: '/main/fnct/intlRecommendPblanc/addEvent.json',
+        data: {
+            type: type,
+            pblancSeq: pblancSeq,
+        },
+        type: 'post',
+        dataType:'json',
+        success: function(data){
+            if (data.status == 200) {
+                window.open(dtlUrl);
+            } else {
+                alert("시스템 오류가 발생하였습니다. 관리자에게 문의해 주세요.");
+            }
+        },
+        error : function(){
+            alert("시스템 오류가 발생하였습니다. 관리자에게 문의해 주세요.");
+        }
+    });
+}
+
+        function copy(){
+            //복사문구값 가져오기
+            const copyTxt = document.getElementById('myUrl');
+            copyTxt.value = window.document.location.href;
+            //복사문구 선택
+            copyTxt.focus();
+            copyTxt.select();
+            copyTxt.setSelectionRange(0,9999);              //Mobile 대응
+            //복사
+            document.execCommand("copy");
+        }
+</script>
+                    <input type="hidden" id="reqstLinkInfo" name="reqstLinkInfo" value="https://ybs.ypa.or.kr/poratlAppFormDtl.do?regNo=RGS_0000000000000565"/>
+                    <input type="text" id="myUrl" name="myUrl" value="" style="position:absolute; left:-9999px" title="myUrl"/>
+                    <!-- 컨텐츠 입력 -->
+                    <h5 style="display: none;"> 탭</h5>
+                        <div class="sub-title-wrap scrap_btn btn_align">
+                            <div class="subject">[경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고</div>
+                        </div>
+                        <div class="tbl-wrap tbl_line_b">
+                            <table class="tbl-list01 type01 tline mt20 line_b">
+                                <caption>[경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고</caption>
+                                <colgroup>
+                                    <col style="width:25%">
+						            <col style="width:25%">
+						            <col style="width:25%">
+						            <col style="width:25%">
+                               <!--      <col style="width:15%">
+                                    <col style="width:20%"> -->
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">주관기관</th>
+                                    <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                                    <td>용인시산업진흥원</td>
+                                                <th scope="row">진행상태</th>
+                                    <td><span>신청 가능</span>
+                                    <div class="print_btn" style="">
+                                            <!-- <a href="javascript:void(0)" onclick="">신청</a> -->
+                                            </div>
+                                    </td>
+                                    <!-- <th scope="row">공유</th>
+                                    <td><a href="javascript:copy();" class="btn url-copy">URL복사</a></td> -->
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="correct-form correct_typeB infoview-form mt0"> <!-- 251201 mt0 class 추가 -->
+                            <dl>
+                                <dt>사업개요</dt>
+                                <dd class="boardview-data">
+                                	<div>
+                                		<p>용인시산업진흥원에서는 관내 중소기업의 해외시장 진출 및 수출활성화를 도모하기 위한 해외물류비 지원을 시행하오니 많은 참여 바랍니다.</p><p><br></p><p style="line-height: 1.8;">☞ 용인 소재 본사 또는 공장 등이 있고 수출제품을 보유한 신청일 기준 정산서류 구비 완료 중소기업</p><p style="line-height: 1.8;">※ 자세한 지원대상 공고문 참조</p><p><br></p><p style="line-height: 1.8;">☞ 제품 수출 시 발생하는 물류비용 지원(최대 300만원)</p><p style="line-height: 1.8;">- 국제우편(EMS), 국제특송업체(DHL, FEDEX 등), 포워딩 업체 비용 등</p><p style="line-height: 1.8;">※ 자세한 지원내용 공고문 참조</p></div>
+                                	<button type="button" class="boardview-toggle" >
+		               					<img class="offimg" src="/main/resources/theme/portal/assets/image/main23/ico-boardviewmore-down.svg" alt="사업개요 자세히보기" />
+		               					<img class="onimg" src="/main/resources/theme/portal/assets/image/main23/ico-boardviewmore-up.svg" alt="사업개요 간략보기" />
+		               				</button>
+                                </dd>
+                            </dl>
+                            <dl>
+								<dt>지원대상</dt>
+								<dd>
+									중소기업</dd>
+							</dl>
+							<dl>
+                                <dt>신청기간</dt>
+                                <dd>2026-04-09 ~ 2026-04-15</dd>
+                            </dl>
+                            <dl>
+                                <dt>신청방법</dt>
+                                <dd> 
+                                    <!-- <p>- 신청방법 : 온라인 접수 (바로가기)</p>
+                                    <p>- 제출서류 : 사업자등록증, 중소기업확인서, 국세 ·지방세 완납증명서, 법인등기부등본(법인인 경우), 기타 우대서류 등</p>
+                                    <p>&nbsp; * 제출하신 서류는 반환되지 않습니다.</p> -->
+                                    온라인 접수 (용인기업지원시스템)</dd>
+                            </dl>
+                            <dl>
+                                <dt>문의처</dt>
+                                <dd>용인시산업진흥원 판로지원팀 031-323-4690</dd>
+                            </dl>
+                            <dl>
+                                <dt>공고문</dt>
+                                <dd>
+                                            <a href="/main/comm/getFile?srvcId=CNTCWRTANC&amp;upperNo=262878402&amp;fileTy=CNTCATTACH&amp;fileNo=1">1.-2026년-제1차-해외진출-종합지원사업해외물류비-공고.hwp</a>
+                                        </dd>
+                                    </dl>
+                            <dl id="viewer" style="padding:10px;"></dl>
+                            </div>
+                      
+                        <div class="btn-wrap s_resize">
+                            <a href="javascript:void(0)" class="btn blue" onclick="window.open('https://www.bizinfo.go.kr/sii/siia/selectSIIA200Detail.do?pblancId=PBLN_000000000120272')" title="새창열림">상세정보</a>
+                                <!-- 20250925 hhlee 기업마당 상태여부가 null 이거나 N인 경우 신청 버튼 표시
+                                 20251022 hhlee 기업마당(중견외) : 더많은사업공고 관련 사업도 신청 버튼이 표시되도록 이전 로직 삭제 -->
+                            <a href="javascript:void(0)" class="btn blue" onclick="window.open('https://ybs.ypa.or.kr/poratlAppFormDtl.do?regNo=RGS_0000000000000565')" title="새창열림">신청</a>
+                            <!--<a href="javascript:back()" class="btn gray">목록</a>
+                            <a href="/main/sportsBsnsPolicy?curPage=" class="btn gray">목록</a>-->
+                            <!--<a href="/main/sportsBsnsPolicy?" class="btn gray">목록</a>-->
+                            <!--<a href="javascript:copy();" class="btn gray">URL복사</a>-->
+                        </div>
+                        <div style="height:100px;"></div>
+
+<div id="include_popup3" class="dialog"> 
+	<div class="pop-wrap type01">
+		<div class="pop-header">
+			<h5 class="tit" id="insttNmTd">사전확인</h5>
+		</div>
+		<div class="pop-cont address_pop">
+			<div class="tbl-wrap map">
+				<div class="terms" id="pop_text">
+            	</div><!--// 타입1 -->
+            	<div class="point-cont">
+                   	 ※ 공고신청은 새창으로 열립니다. 브라우저 설정에서 팝업차단 설정을 해제해주세요.
+                </div>
+			    <div class="btn-wrap">
+			        <a id="btn_pop_req" href="" class="btn blue" onclick="fn_include_popClose3()" style="text-align:center;" target="_blank"></a>&nbsp;&nbsp;
+			        <a id="btn_pop_url" href="" class="btn gray" style="text-align:center;" target="_blank"></a>
+			    </div>
+			</div>
+			<br>
+			<div class="tbl-wrap">
+				<table class="tbl-list01" id="sf_table">
+                    <caption>공고명</caption>
+					<colgroup>
+						<col style="width:15%">
+						<col style="width:85%">
+					</colgroup>
+					<thaed>
+						<tr><th scofpe="row">선택</th><th scope="row">공고명</th></tr>
+					</thaed>
+					<tbody id="sf_detail"></tbody>
+				</table>
+			</div>
+            <a href="javascript:void(0)" onclick="fn_include_popClose3()" class="pop-close"><i class="el-icon-close"></i><span class="blinder">닫기</span></a>
+		</div>
+	</div>
+</div>
+
+<div id="include_popup1" class="dialog layer_popupA">
+    <div class="pop-wrap type01 pop_typeA">
+        <div class="pop-header">
+            <h5 class="tit" id="insttNmTd">지원사업 신청</h5>
+        </div>
+        <div class="pop-cont address_pop">
+            <div class="identity_info_use">
+                <div class="info_use_inner">
+                    <p class="tit">개인정보 수집 및 이용 안내</p>
+                    <div class="use_con">
+                        <span>중소벤처24는 지원사업의 신청을 위해 다음과 같이 개인정보의 수집, 이용에 대한 동의를 받고 있습니다.  
+                            중소벤처24가 취급하는 모든 개인정보는 「개인정보보호법」 등 관련 법령상의 개인정보보호 규정을 준수하여 수집, 보유, 처리되며, 이용자의 개인정보 및 권익을 보호하고 개인정보 관련 고충을 원활하게 처리할 수 있도록 중소벤처24는 개인정보처리방침을 수립하여 운용하고 있습니다.
+                        </span>
+                        <p class="sub_title">개인정보의 수집 및 이용 동의</p>
+                            <table class="use_table">
+                                <caption>개인정보 수집목적, 수집항목, 보유 및 이용기간을 나타냅니다.</caption>
+                                <colgroup>
+                                    <col width="20%">
+                                    <col width="auto">
+                                    <col width="30%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="row">수집목적</th>
+                                        <th scope="row">수집항목</th>
+                                        <th scope="row">보유 및 이용기간</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>지원사업 신청</td>
+                                        <td>필수정보 : 신청자 이름, 휴대전화번호, 이메일 주소 <br></td>
+                                        <td class="font-color-red">사업 선정 시까지</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        <span>※ 개인정보의 수집·이용에 동의하지 않을 수 있으나, 필수 정보의 제공 및 동의를 거부하는 경우 지원사업을 신청하실 수 없습니다.</span>
+                        <div class="chk-wrap">
+                            <input type="radio" class="radio agree" name="chkClause1" id="radio01">
+                            <label for="radio01">동의합니다.</label>&nbsp;
+                            <input type="radio" class="radio" name="chkClause1" id="radio02">
+                            <label for="radio02">동의하지 않습니다.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-wrap type01">
+                <a href="javascript:void(0)" onclick="fn_include_popOpen2('#include_popup2', this);" class="btn blue">신청서 작성</a>
+            </div>
+            <a href="javascript:void(0)" onclick="fn_include_popClose1()" id="include_popup1_btnClose"><i class="el-icon-close"></i><span class="blinder">닫기</span></a>
+        </div>
+    </div>
+</div>
+
+<form id="frm" name="frm" method="post" action="/main/sportsBsnsPolicy/drctReqstAction" enctype="multipart/form-data">
+<input type="hidden" id="delAttachFileNo" name="delAttachFileNo" value="" />
+<input type="hidden" id="gubun" name="gubun" value="" />
+<input type="hidden" id="saveCode" name="saveCode" value="" />
+<input type="hidden" id="pblancSeq" name="pblancSeq" value="262878402"/>
+<div id="include_popup2" class="dialog layer_popupA">
+    <div class="pop-wrap type01 pop_typeA">
+        <div class="pop-header">
+            <h5 class="tit" id="insttNmTd">지원사업 신청</h5>
+        </div>
+
+        <div class="pop-cont address_pop">
+            <div class="pop_title"><span class="skyblue_text">([경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고)</span> 사업 신청서</div>
+
+            <div class="correct-form correct_typeB correct_p mt0 mb0">
+                <dl class="half_dl">
+                    <dt>주관기관</dt>
+                    <dd>
+                        <label for="agency" class="hd-element">주관기관</label>
+                        <input type="text" id="agency" class="inp w100p" value="용인시산업진흥원" disabled="" title="주관기관">
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>접수번호</dt>
+                    <dd>
+                        <label for="accept_num" class="hd-element">접수번호</label>
+                        <input type="text" id="rceptNo" name="rceptNo" class="inp w100p" value="" readonly title="접수번호">
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="p10">
+                <ul>
+                    <li>※ 기업 정보에 변경사항이 있는 경우, 반드시 <span class="skyblue_text">마이페이지> 회원정보관리> 회원정보변경</span> 메뉴에서 정보 수정 후 사업을 신청해 주세요. 신청서 제출 후에는 기업 정보를 변경할 수 없습니다.</li>
+                    <li class="mt5">※ *표시는 필수 입력입니다.</li>
+                </ul>
+            </div>
+            <div class="correct-form correct_typeB correct_p mt0">
+                <dl class="half_dl">
+                    <dt>기업명</dt>
+                    <dd>
+                        <label for="cmpNm" class="hd-element">기업명</label>
+                        <input type="text" id="cmpNm" name="cmpNm" class="inp w100p" value="" disabled>
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>대표자명</dt>
+                    <dd>
+                        <label for="rName" class="hd-element">대표자명</label>
+                        <input type="text" id="rName" name="rName" class="inp w100p" value="" disabled>
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>사업자등록번호<span class="required">*</span></dt>
+                    <dd class="ml10">
+                        <label for="bizno" class="hd-element">사업자등록번호</label>
+                        <input type="text" id="bizno" name="bizno" class="inp w100p" value="" readonly>
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>대표전화번호<span class="required">*</span></dt>
+                    <dd>
+                        <label for="rTel" class="hd-element">대표전화번호</label>
+                        <input type="text" id="rTel" name="rTel" class="inp w100p" value="" disabled>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>소재지<span class="required">*</span></dt>
+                    <dd>
+                        <label for="location" class="hd-element">소재지</label>
+                        <input type="text" id="location" class="inp w100p" value="" disabled>
+                    </dd>
+                </dl>
+            </div>
+			
+			<div class="tit_wrap mt20">
+                <h4 class="pop_sub_tit mt0">신청자 정보</h4>
+                <div class="load">
+                    <label for="load" class="loading_label">기업관리자 정보 불러오기</label>
+                    <input type="checkbox" class="checkbox loading_check" id="load" name="load" onclick="ghrgprLoad()">
+                </div>
+            </div>
+            <div class="correct-form correct_typeB correct_p mt0 mb0" id="ghrgprInfo">
+                <dl class="half_dl">
+                    <dt>신청자명<span class="required">*</span></dt>
+                    <dd>
+                        <label for="applicant_name" class="hd-element">신청자명</label>
+                        <input type="text" id="applicantName" name="applicantName" class="inp w100p" value="" title="신청자명">
+                        <input type="hidden" id="applicantId" name="applicantId" value="">
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>휴대전화번호<span class="required">*</span></dt>
+                    <dd>
+                        <label for="p_num" class="hd-element">휴대전화번호</label>
+                        <div class="form form_phone">
+                            <select class="select phone w60" title="통신사선택" id="phone" name="phone" selected="selected">
+                                <option value="">선택</option>
+                                <option value="010" >010</option>
+								<option value="011" >011</option>
+								<option value="017" >017</option>
+								<option value="019" >019</option>
+                            </select>
+                            <span class="etc">-</span>
+                            <input type="number" class="inp w70" title="전화번호 앞자리" id="phone1" name="phone1" value="">
+                            <span class="etc">-</span>
+                            <input type="number" class="inp w70" title="전화번호 뒷자리" id="phone2" name="phone2" value="">
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>부서명</dt>
+                    <dd>
+                        <label for="department" class="hd-element">부서명</label>
+                        <input type="text" id="department" name="department" class="inp w100p" value="">
+                    </dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>이메일<span class="required">*</span></dt>
+                    <dd>
+                        <label for="eMail" class="hd-element">이메일</label>
+                        <input type="text" id="eMail" name="eMail" class="inp w100p" value="">
+                    </dd>
+                </dl>
+            </div>
+
+            <div class="tit_wrap mt20">
+                <h4 class="pop_sub_tit mt0">사업신청 안내</h4>
+            </div>
+            <div class="business_guide">
+                <ul>
+                	<li>
+                        <div class="confirm_check">
+                            <input type="checkbox" class="checkbox" id="confirm" name="confirm" value="Y" >
+                            <label for="confirm" class="">상기 입력한 내용은 사실과 다름이 없음을 확인하며, <span class="skyblue_text">( [경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고 ) </span>사업을 신청합니다.</label>
+                        </div>
+                        <div class="signature"> 
+                            <div class="date"></div>
+                            <div class="name">
+                                <p>신청인</p>
+                                <span></span>    
+                            </div>
+                         </div>
+                    </li>
+                    </ul>
+            </div>
+            
+            <div class="btn-wrap right_btn">
+                <a href="#a" onclick="save('C');" class="btn blue" title="신청서제출">신청서제출</a>
+            </div>
+
+            <div class="btn-wrap type01">
+                <a href="javascript:void(0)" onclick="fn_include_popClose2();" class="btn gray">닫기</a>
+                <a href="javascript:void(0)" onclick="save('S');" class="btn blue">저장</a>
+            </div>
+            <a href="javascript:void(0)" onclick="fn_include_popClose2()"><i class="el-icon-close"></i><span class="blinder">닫기</span></a>
+        </div>
+        
+    </div>
+</div>
+</form>
+
+<form id="dlForm" name="dlForm" method="post" target="_self" action="/main/sportsBsnsPolicy/fileDownload">
+	<input type="hidden" name="downloadFileName" id="downloadFileName"/>
+	<input type="hidden" name="downloadFilePath" id="downloadFilePath"/>
+	<input type="hidden" name="realFileName" id="realFileName"/>
+</form>
+
+<div id="include_popup4" class="dialog layer_popupA">
+    <div class="pop-wrap type01 pop_typeA">
+        <div class="pop-header">
+            <h5 class="tit" id="insttNmTd">지원사업 신청</h5>
+        </div>
+
+        <div class="pop-cont address_pop">
+            <div class="pop_title"><span class="skyblue_text">([경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고)</span> 사업 신청서</div>
+            <div class="correct-form correct_typeB mt0">
+                <dl class="half_dl">
+                    <dt>주관기관</dt>
+                    <dd>용인시산업진흥원</dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>접수번호</dt>
+                    <dd></dd>
+                </dl>
+            </div>
+            <div class="correct-form correct_typeB">
+                <dl class="half_dl">
+                    <dt>기업명</dt>
+                    <dd></dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>대표자명</dt>
+                    <dd></dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>사업자등록번호</dt>
+                    <dd class="ml10"></dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>대표전화번호</dt>
+                    <dd></dd>
+                </dl>
+                <dl>
+                    <dt>소재지</dt>
+                    <dd></dd>
+                </dl>
+            </div>
+			
+			<div class="tit_wrap mt20">
+                <h4 class="pop_sub_tit mt0">신청자 정보</h4>
+            </div>
+            <div class="correct-form correct_typeB mt0">
+                <dl class="half_dl">
+                    <dt>신청자명</dt>
+                    <dd></dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>휴대전화번호</dt>
+                    <dd>--</dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>부서명</dt>
+                    <dd></dd>
+                </dl>
+                <dl class="half_dl">
+                    <dt>이메일</dt>
+                    <dd></dd>
+                </dl>
+            </div>
+
+            <div class="tit_wrap mt20">
+                <h4 class="pop_sub_tit mt0">사업신청 안내</h4>
+            </div>
+            <div class="business_guide">
+                <ul>
+                	<li>
+                        <div class="confirm_check">
+                            <input type="checkbox" class="checkbox" id="confirm" name="confirm" checked disabled>
+                            <label for="confirm" class="">상기 입력한 내용은 사실과 다름이 없음을 확인하며, <span class="skyblue_text">( [경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고 ) </span>사업을 신청합니다.</label>
+                        </div>
+                        <div class="signature"> 
+                            <div class="date"></div>
+                            <div class="name">
+                                <p>신청인</p>
+                                <span></span>    
+                            </div>
+                         </div>
+                    </li>
+                    </ul>
+            </div>
+    
+            <div class="btn-wrap type01">
+                <a href="javascript:void(0)" onclick="fn_include_popClose4();" class="btn gray">닫기</a>
+            </div>
+            <a href="javascript:void(0)" onclick="fn_include_popClose4()"><i class="el-icon-close"></i><span class="blinder">닫기</span></a>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+function fn_fileDownload(fname, path, oriname){
+	var f = document.dlForm;
+	
+ 	$("#downloadFileName").val(fname);
+	$("#downloadFilePath").val(path);
+	$("#realFileName").val(oriname);
+ 	f.submit();
+}
+
+function save(code){
+	if(code == "S"){
+		$("#saveCode").val("신청중");
+		$("#frm").submit();
+	}else{
+		
+		if("" == "Y"){
+			if($("#cmpScaleCd").val()=="" || $("#cmpScaleCd").val()==null){
+				alert("기업규모는 필수 입력 값입니다.");
+				return;
+			}
+			if($("#srchBeginDt").val()=="" || $("#srchBeginDt").val()==null){
+				alert("설립일은 필수 입력 값입니다.");
+				return;
+			}
+			if($("#workNum").val()=="" || $("#workNum").val()==null){
+				alert("근로자수는 필수 입력 값입니다.");
+				return;
+			}
+			if($("#take").val()=="" || $("#take").val()==null){
+				alert("매출액은 필수 입력 값입니다.");
+				return;
+			}
+		}
+		if($("#applicantName").val()=="" || $("#applicantName").val()==null){
+			alert("신청자명은 필수 입력 값입니다.");
+			return;
+		}
+		if($("#phone").val()=="" || $("#phone").val()==null || $("#phone1").val()=="" || $("#phone1").val()==null || $("#phone2").val()=="" || $("#phone2").val()==null){
+			alert("휴대전화번호는 필수 입력 값입니다.");
+			return;
+		}
+		if($("#eMail").val()=="" || $("#eMail").val()==null){
+			alert("이메일은 필수 입력 값입니다.");
+			return;
+		}
+		if(!$("#confirm").is(":checked")){
+			alert("신청동의는 필수 체크 값입니다.");
+			return;
+		}
+		
+		if(confirm("사업 신청서를 제출하시겠습니까? 신청서 제출 후에는 수정이 불가합니다.")){
+			$("#saveCode").val("신청완료");
+			
+			$("#frm").submit();
+		}
+		
+		
+	}
+	
+}
+function delFile(fileNo, type, spanNo){
+	if(confirm("삭제하시겠습니까?")){
+		if(type == "ATTACH"){
+			if($("#delAttachFileNo").val()==""){
+				$("#delAttachFileNo").val(fileNo);
+			}else{
+				$("#delAttachFileNo").val($("#delAttachFileNo").val()+","+fileNo);
+			}
+			$("#attachFileViewSpan"+fileNo).remove();
+			$("#attachFileInputSpan"+spanNo).show();
+		}
+		else{
+			if($("#delAttachFileNo").val()==""){
+				$("#delAttachFileNo").val(fileNo);
+			}else{
+				$("#delAttachFileNo").val($("#delAttachFileNo").val()+","+fileNo);
+			}
+			$("#thumbFileViewSpan" + fileNo).remove();
+			$("#thumbFileInputSpan"+spanNo).show();
+		}
+	}
+}
+
+function f_subFileChk(fileObj, sn){
+	if(fileObj.value != ""){
+
+		var file = fileObj.value;
+		var fileExt = file.substring(file.lastIndexOf('.') + 1, file.length).toLowerCase();
+		var reg = /zip|hwp|xls|xlsx|doc|docx|ppt|ppts|pdf|gif|jpg|png/i;
+
+		if(reg.test(fileExt) == false)
+		{
+			alert("zip 압축파일, 문서(한글, 엑셀, MS워드, 파워포인트), 이미지 또는 pdf\n파일만 첨부 가능합니다.");
+			fileObj.value = "";
+			return false;
+			return false;
+		}
+		
+		if(fileObj.files[0].size > (10 * 1024 * 1024)){
+			alert("10MB 이하의 파일만 가능합니다.");
+			fileObj.value = "";
+			return false;
+			return false;
+		}
+		
+		$("#p_imageShow"+sn).text(file.substring(file.lastIndexOf('\\')+1, file.length));
+		$("#p_imageDiv"+sn).show();
+		
+		return true;
+	}
+}
+function p_imageDelete(sn){
+	
+	if(confirm("삭제하시겠습니까?")){
+		$("#p_image"+sn).val("");
+		$("#p_imageDiv"+sn).hide();
+	}
+}
+
+$('.boardview-toggle').on('click', function(){
+		$('.boardview-data').toggleClass('on');
+});
+</script>
+
+            </div>
+            <!-- end article -->
+<script>
+    document.title = '[경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고 | ' + document.title;
+</script>
+
+<!-- 240905 신예리 footer 스타일 추가 -->
+<style>
+/*2025.01.06 신예리 웹접근성 마크 추가*/
+.wa-imgBox { float: right; }
+.wa-imgBox > a { display: inline-block; width: 95px; height: 65px; }
+.wa-imgBox > a > img {  width: 100%; height: 100%; aspect-ratio: 400 / 284; }
+</style>
+</div><!-- //article -->
+        </div><!-- //normal-wrap -->
+    <!-- end:content -->
+<!-- start:footer -->
+<footer>
+        <div class="footer_nav">
+            <ul class="fl_wrap">
+                <li><a href="/main/useTerms">이용약관</a></li>
+                <li><a href="https://www.tipa.or.kr/s0801"  class="pointText" title="새창열림" target="_blank">개인정보처리방침</a></li> <!-- 240905 txt_blue Class pointText로 변경 -->
+            <!-- <li><a href="/siteQna">개선의견수렴</a></li> -->
+                <li><a href="/main/dbCnrs">open API</a></li>
+            </ul>
+        </div>
+        <div class="footer_info fl_wrap">
+            <div class="footer_logo fl_left">
+                <img src="/main/resources/theme/portal/assets/image/common/logo.png" class="logo_bk" alt="중소벤처24">
+                <img src="/main/resources/theme/portal/assets/image/common/logo-w.png" class="logo_w" alt="중소벤처24">
+            </div>
+            <div class="footer_adds fl_left">
+                <dl class="fl_wrap">
+                    <dt>중소벤처24 시스템 장애 문의</dt>
+                    <dd>(044) 300-0990, (044) 300-0991</dd>
+                </dl>
+                <dl class="fl_wrap">
+                    <dt>메일문의</dt>
+                    <dd>smeshelp@tipa.or.kr</dd>
+                </dl>
+                <dl class="fl_wrap">
+                    <dt>중소벤처기업부</dt>
+                    <dd>30121, 세종특별자치시 가름로 180(어진동), 세종파이낸스센터3차 4층~6층</dd>
+                </dl>
+                <dl class="fl_wrap">
+                    <dt>대표전화</dt>
+                    <dd>국번없이 1357</dd>
+                </dl>
+                <dl class="fl_wrap">
+                    <dt>[운영기관] 중소기업기술정보진흥원</dt>
+                    <dd>(30141, 세종특별자치시 집현중앙로 79, 중소기업기술정보진흥원(TIPA)</dd>
+                </dl>
+                <div class="copyright mt20">copyright ⓒ <b>중소벤처기업부</b>. all rights reserved.</div>
+            </div>
+            <!-- 25.01.06 신예리 웹접근성 마크 추가 -->
+            <div class="wa-imgBox">
+                <a title="새창" href="http://www.wa.or.kr/board/list.asp?BoardID=0006" target="_blank">
+                <img alt="(사)한국장애인단체총연합회한국웹접근성인증평가원웹접근성우수사이트인증마크(WA인증마크)" src="/main/resources/theme/portal/assets/image/common/wa_logo.png" />
+                </a>
+            </div>
+        </div>
+    </footer>
+<script>
+    function fn_ft_chgSl(obj){
+        var url = $(obj).val();
+        window.open(url,'_blank');
+        $(obj).val("").attr("selected", "selected");
+    }
+    
+    function openPrivacyPolicy(){
+        var url = 'https://www.tipa.or.kr/s0801';
+        var windowName = 'privacyPolicy';
+        var windowSize = 'width=800,height=600,scrollbars=yes';
+        
+        window.open(url, windowName, windowSize);
+    }
+    
+</script>
+        <!-- end:footer -->     
+    </div><!-- //wraper -->
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-39666493-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-39666493-1');
+  
+  sessionStorage.setItem("mberTy", '');  //로그인 타입 저장
+    if(IS_MOBILE){
+        $("#mypageList").show();
+    }else{
+        $("#mypageList").hide();
+    }
+</script>
+
+</body>
+</html>

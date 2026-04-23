@@ -1,0 +1,527 @@
+
+        <caption>사업  공고  목록으로  번호, 공고명, 신청기간, 신청, 사업유형, 지원기관으로  구성되었습니다.</caption>
+        <colgroup>
+            <col style="width:5%">
+            <col style="width:auto">
+            <col style="width:17%">
+            <col style="width:8%">
+            <col style="width:8%">
+            <col style="width:15%">
+            <!--  -->
+            <col style="width:5%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">공고명</th>
+                <th scope="col">신청기간</th>   
+                
+                <!-- <th scope="col">공고일</th> -->
+                <!-- <th scope="col">신청</th> -->
+                <th scope="col">신청</th>
+                <th scope="col">사업유형</th>
+                <th scope="col">지원기관</th>
+                <!--  -->
+                <th scope="col">조회수</th>
+             <!--    <th scope="col">등록일</th>
+                <th scope="col">수정일</th> -->
+                <!-- <th scope="col">공개여부</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1422</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081759','0', 'BI16', 'PBLN_000000000120639','소상공인시장진흥공단', '신청 가능')" title="2026년 소상공인 불공정거래 피해구제 지원 시행 공고">
+                                2026년 소상공인 불공정거래 피해구제 지원 시행 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            경영</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">소상공인시장진흥공단</td>
+                                    <!--  -->
+						<td>26</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1421</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081512','1', 'BI16', 'PBLN_000000000120640','기초자치단체', '신청 가능')" title="[서울] 강남구 뉴스타트 인턴십 참여기업 모집 공고">
+                                [서울] 강남구 뉴스타트 인턴십 참여기업 모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            인력</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">서울특별시</td>
+                                    <!--  -->
+						<td>15</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1420</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081509','2', 'BI16', 'PBLN_000000000120643','한국산업기술시험원', '신청 가능')" title="[경남] 사천시 우주항공부품 품질 향상 지원사업 공고">
+                                [경남] 사천시 우주항공부품 품질 향상 지원사업 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            중견</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">한국산업기술시험원</td>
+                                            <!--  -->
+						<td>13</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1419</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081503','3', 'BI16', 'PBLN_000000000120649','원주의료기기산업진흥원', '신청 가능')" title="2026년 22회 2차 강원의료기기전시회(GMES 2026) 참가기업 모집 공고">
+                                2026년 22회 2차 강원의료기기전시회(GMES 2026) 참가기업 모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    모집 완료시</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            경영</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">원주의료기기산업진흥원</td>
+                                    <!--  -->
+						<td>11</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1418</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081501','4', 'BI16', 'PBLN_000000000120651','부산경제진흥원', '신청 가능')" title="[부산] 2026년 5차 중소기업 자금지원계획 변경 공고">
+                                [부산] 2026년 5차 중소기업 자금지원계획 변경 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            금융</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">부산경제진흥원</td>
+                                    <!--  -->
+						<td>16</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1417</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081499','5', 'BI16', 'PBLN_000000000120653','강원특별자치도경제진흥원', '신청 가능')" title="[강원] 2026년 K-브랜드분쟁 대응전략 지원사업 수시 공고(강원연계)">
+                                [강원] 2026년 K-브랜드분쟁 대응전략 지원사업 수시 공고(강원연계)</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            수출</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">강원특별자치도경제진흥원</td>
+                                    <!--  -->
+						<td>14</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1416</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081479','6', 'BI16', 'PBLN_000000000120673','한국탄소산업진흥원', '신청 가능')" title="2026년 다공성 탄소소재 기반 환경소재 및 부품개발 기반구축 사업 수혜기업 지원(시제품 제작 및 기술지도) 사업 공고">
+                                2026년 다공성 탄소소재 기반 환경소재 및 부품개발 기반구축 사업 수혜기업 지원(시제품 제작 및 기술지도) 사업 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            기술</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">한국탄소산업진흥원</td>
+                                    <!--  -->
+						<td>16</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1415</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081472','7', 'BI16', 'PBLN_000000000120681','전남테크노파크', '신청 가능')" title="[전남] 2026년 IP(지식재산) 디딤돌 프로그램 후속지원사업 지원대상 모집 공고">
+                                [전남] 2026년 IP(지식재산) 디딤돌 프로그램 후속지원사업 지원대상 모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            창업</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">전남테크노파크</td>
+                                    <!--  -->
+						<td>15</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1414</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081469','8', 'BI16', 'PBLN_000000000120684','직접수행', '신청 가능')" title="[세종] 2026년 식품진흥기금 융자사업 시행 공고">
+                                [세종] 2026년 식품진흥기금 융자사업 시행 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            금융</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">세종특별자치시</td>
+                                    <!--  -->
+						<td>12</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1413</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081388','9', 'BI16', 'PBLN_000000000120698','한국노인인력개발원', '신청 가능')" title="2026년 현장실습 훈련(시니어인턴십) 지원사업 공고(아이피시)">
+                                2026년 현장실습 훈련(시니어인턴십) 지원사업 공고(아이피시)</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    예산 소진시까지</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            인력</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">한국노인인력개발원</td>
+                                    <!--  -->
+						<td>13</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1412</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-dday-tag">D-18</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081510','10', 'BI16', 'PBLN_000000000120642','장애인기업종합지원센터', '신청 가능')" title="2026년 해외전시회 한국관 참가 기업 모집 공고">
+                                2026년 해외전시회 한국관 참가 기업 모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-30</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            수출</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">장애인기업종합지원센터</td>
+                                    <!--  -->
+						<td>10</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1411</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-dday-tag">D-26</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('265081505','11', 'BI16', 'PBLN_000000000120647','지능형자동차부품진흥원', '신청 가능')" title="2026년 SDV 전장부품 보안 평가센터 기업지원사업 수혜기업 모집 공고">
+                                2026년 SDV 전장부품 보안 평가센터 기업지원사업 수혜기업 모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-05-08</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            기술</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">지능형자동차부품진흥원</td>
+                                    <!--  -->
+						<td>12</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1410</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-dday-tag">D-11</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('264988410','12', 'BI10', '16010','(사)미주한인상공회의소총연합회한국지회', '신청 가능')" title="2026 미국 라스베가스 ASD 소비재 전략 수출컨소시엄">
+                                2026 미국 라스베가스 ASD 소비재 전략 수출컨소시엄</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-23</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            수출</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;"> 중소기업중앙회</td>
+                                    <!--  -->
+						<td>25</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1409</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-schedulelist-tag deadline">마감임박</span>
+                            <span class="on-dday-tag">D-3</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('264526053','13', 'BI16', 'PBLN_000000000120574','직접수행', '신청 가능')" title="[서울] 2026년 음식점 미세먼지ㆍ악취 방지시설 설치 지원사업 추가모집 공고">
+                                [서울] 2026년 음식점 미세먼지ㆍ악취 방지시설 설치 지원사업 추가모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-15</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            경영</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">서울특별시</td>
+                                    <!--  -->
+						<td>45</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1408</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-schedulelist-tag popular">인기</span>
+							<span class="on-dday-tag">D-11</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('263151206','14', 'BI16', 'PBLN_000000000120382','정보통신산업진흥원', '신청 가능')" title="2026년 고성능 컴퓨팅 지원 사용자 모집 공고">
+                                2026년 고성능 컴퓨팅 지원 사용자 모집 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-23</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            경영</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">정보통신산업진흥원</td>
+                                    <!--  -->
+						<td>143</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1407</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-schedulelist-tag deadline">마감임박</span>
+                            <span class="on-dday-tag">D-3</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('262878402','15', 'BI16', 'PBLN_000000000120272','용인시산업진흥원', '신청 가능')" title="[경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고">
+                                [경기] 용인시 2026년 1차 해외진출 종합지원사업(해외물류비) 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-15</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            수출</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">용인시산업진흥원</td>
+                                    <!--  -->
+						<td>33</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1406</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-schedulelist-tag deadline">마감임박</span>
+                            <span class="on-dday-tag">D-5</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('262054715','16', 'BI16', 'PBLN_000000000120115','영월산업진흥원', '신청 가능')" title="[강원] 태백시ㆍ영월군 2026년 광물자원 활용 기반산업 경쟁력 강화 지원모집 공고(시군구 연고산업 육성사업)">
+                                [강원] 태백시ㆍ영월군 2026년 광물자원 활용 기반산업 경쟁력 강화 지원모집 공고(시군구 연고산업 육성사업)</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-17</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            경영</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">영월산업진흥원</td>
+                                    <!--  -->
+						<td>30</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1405</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-schedulelist-tag popular">인기</span>
+							<span class="on-dday-tag">D-17</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('261234741','17', 'BI16', 'PBLN_000000000120038','중소기업기술정보진흥원', '신청 가능')" title="2026년 3차 창업성장기술개발사업(디딤돌) 시행계획 공고">
+                                2026년 3차 창업성장기술개발사업(디딤돌) 시행계획 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-29</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            기술</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">중소기업기술정보진흥원</td>
+                                    <!--  -->
+						<td>134</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1404</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-dday-tag">D-25</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('260961468','18', 'BI16', 'PBLN_000000000119990','중소기업기술정보진흥원', '신청 가능')" title="2026년 중소기업기술혁신개발사업(도메인특화AI모델개발) 시행계획 공고">
+                                2026년 중소기업기술혁신개발사업(도메인특화AI모델개발) 시행계획 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-05-07</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            기술</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;">중소기업기술정보진흥원</td>
+                                    <!--  -->
+						<td>85</td>
+
+                    </tr>
+                <!-- 신규 아이콘 표시용 -->
+            		<!-- 이번주 일요일~토요일가져오기 -->
+					<tr>
+                        <td style="text-align: center; text-overflow: clip;">1403</td>
+                        <td style="text-align: left;">
+                            <p class="on-schedulelist-title pbl">
+                            <span class="on-dday-tag">D-17</span>
+                            </p>
+                            <p class="on-schedulelist-link">
+                            <a href="javascript:fn_include_popOpen2('260944134','19', 'BI13', '020357','중소기업기술정보진흥원', '신청 가능')" title="2026년도 창업성장기술개발사업 디딤돌(도약_연구개발특구 연계 R&amp;D) 제3차 시행계획 공고">
+                                2026년도 창업성장기술개발사업 디딤돌(도약_연구개발특구 연계 R&amp;D) 제3차 시행계획 공고</a>
+                            </p>
+                        </td>
+                        <td style="text-align:center;">
+						    26-04-09 ~ 26-04-29</td>
+                        <td style="text-align: center;">신청 가능</td>
+                        <td style="text-align: center;">
+                            기술</td>
+                  <!-- 20250814 hhlee 지원기관명 항목 변경 -->
+                        <!-- 20250925 hhlee 기업마당 상태여부가 Y인 경우 주관기관 별도 표시 -->
+                        <td style="text-align: center;"> 중소벤처기업부</td>
+                                    <!--  -->
+						<td>27</td>
+
+                    </tr>
+                </tbody>

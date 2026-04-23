@@ -1,0 +1,265 @@
+targets:
+- id: bizinfo
+  name: 기업마당
+  type: portal
+  start_urls:
+  - https://www.bizinfo.go.kr/sii/siia/selectSIIA200View.do
+  spider: generic
+  requires_playwright: true
+  wait_for_selector: a[href*="selectSIIA200Detail.do"]
+  selectors:
+    detail_links_css: a[href*="selectSIIA200Detail.do"]::attr(href)
+    pagination_param: cpage
+    max_pages: 100
+    fields:
+      title: //h2[@class="title"]//text()
+      institution: //span[contains(@class, "s_title") and contains(., "소관부처")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      operating_agency: //span[contains(@class, "s_title") and contains(., "사업수행기관")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      recruit_period: //span[contains(@class, "s_title") and contains(., "신청기간")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      event_period: ''
+      category: ''
+      region: ''
+      benefits: ''
+      apply_method: //span[contains(@class, "s_title") and contains(., "신청 방법")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      contact_agency: //span[contains(@class, "s_title") and contains(., "문의처")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      contact_phone: ''
+      contact_email: ''
+      documents: //span[contains(@class, "s_title") and contains(., "제출서류")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      target_audience: //span[contains(@class, "s_title") and contains(., "지원대상")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      target_age: ''
+      startup_history: ''
+      exclusion_criteria: ''
+      evaluation_method: ''
+      industry: //span[contains(@class, "s_title") and contains(., "업종")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+      date: //span[contains(@class, "s_title") and contains(., "등록일")]/following-sibling::div[contains(@class,
+        "txt")]//text()
+    details_xpath: //div[contains(@class, "view_cont")]//text()
+    attachments_css: .attached_file_list a::attr(href)
+    category_regex: r'<span>#(.*?)<\/span>'
+- id: gov24
+  name: 정부24(보조금24)
+  type: portal
+  spider: generic
+  requires_playwright: false
+  api_list:
+    url: https://plus.gov.kr/api/portal/v1.0/api/benefitPlus
+    method: POST
+    headers:
+      Accept: 'application/json, text/javascript, */*; q=0.01'
+      User-Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      Referer: 'https://plus.gov.kr/portal/benefitV2/benefitTotalSrvcList'
+      Origin: 'https://plus.gov.kr'
+      X-Requested-With: 'XMLHttpRequest'
+    formdata:
+      apiDtlUrl: selectPbnsvcList
+      svcFdCd: NB0304
+      pageIndex: '{page}'
+      srtOdr: KO
+    detail_url_template: https://plus.gov.kr/portal/benefitV2/benefitTotalSrvcList/benefitSrvcDtl?svcSeq={svcSeq}&bnefType=all&svcId={svcId}
+  api_detail:
+    url: https://plus.gov.kr/api/portal/v1.0/api/benefitPlus
+    method: POST
+    headers:
+      Accept: 'application/json, text/javascript, */*; q=0.01'
+      User-Agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      Referer: 'https://plus.gov.kr/portal/benefitV2/benefitTotalSrvcList'
+      Origin: 'https://plus.gov.kr'
+      X-Requested-With: 'XMLHttpRequest'
+    formdata:
+      apiDtlUrl: selectBnefReqstDtl
+      svcSeq: '{svcSeq}'
+      bnefType: all
+      svcId: '{svcId}'
+    detail_root_json: benefitBnefRequsDtlList
+    mapping:
+      benefits: svcIntrcnCts
+      details: svcCts
+      apply_method: reqstProcss
+      contact_agency: rcvOrgNm
+      contact_phone: refrncTelNo
+      target_audience: sportTg
+      documents: posesPapers
+  selectors:
+    max_pages: 50
+    fields:
+      title: //h3[contains(@class, "tit-fake")]//text()
+      institution: //h3[contains(., "접수 및 문의")]/following-sibling::div//h4[contains(.,
+        "접수기관")]/following-sibling::ul//text()
+      operating_agency: ''
+      recruit_period: //h3[contains(., "신청방법")]/following-sibling::div//h4[contains(.,
+        "신청기간")]/following-sibling::ul//text()
+      event_period: ''
+      category: ''
+      region: ''
+      benefits: //h3[contains(., "지원내용")]/following-sibling::div//text()
+      apply_method: //h3[contains(., "서비스 개요")]/following-sibling::div//p[contains(.,
+        "신청 방법")]/following-sibling::p//text()
+      contact_agency: //h3[contains(., "접수 및 문의")]/following-sibling::div//h4[contains(.,
+        "문의처")]/following-sibling::ul//text()
+      contact_phone: ''
+      contact_email: ''
+      documents: //h3[contains(., "제출 서류")]/following-sibling::div//text()
+      target_audience: //h3[contains(., "서비스 상세")]/following-sibling::div//h4[contains(.,
+        "지원대상")]/following-sibling::ul//text()
+      target_age: ''
+      startup_history: ''
+      exclusion_criteria: ''
+      evaluation_method: ''
+    details_xpath: //h3[contains(., "서비스 상세")]/following-sibling::div//text()
+    attachments_css: ''
+- id: kstartup
+  name: K-Startup 창업지원포털
+  type: portal
+  start_urls:
+  - https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do
+  spider: generic
+  requires_playwright: true
+  wait_for_selector: a[href^="javascript:go_view"]
+  selectors:
+    detail_links_css: a[href^="javascript:go_view"]::attr(href)
+    detail_links_regex: r'go_view\((.*?)\)'
+    detail_url_template: https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?schM=view&pbancSn={0}
+    pagination_param: page
+    max_pages: 50
+    fields:
+      title: //h4[contains(@class, "tit_v")]//text()
+      institution: //li[contains(., "주관기관명")]//text()[not(parent::span[@class="title"])]
+      operating_agency: //li[contains(., "전담기관명")]//text()[not(parent::span[@class="title"])]
+      recruit_period: //li[contains(., "접수기간")]//text()[not(parent::span[@class="title"])]
+      event_period: ''
+      category: //li[contains(., "기관구분")]//text()[not(parent::span[@class="title"])]
+      region: //li[contains(., "지역")]//text()[not(parent::span[@class="title"])]
+      benefits: ''
+      apply_method: //h4[contains(., "신청방법")]/following-sibling::div//text() | //li[contains(.,
+        "신청방법")]//text()
+      contact_agency: //li[contains(., "연락처")]//text()[not(parent::span[@class="title"])]
+      contact_phone: //li[contains(., "전화번호")]//text()[not(parent::span[@class="title"])]
+      contact_email: //li[contains(., "이메일")]//text()[not(parent::span[@class="title"])]
+      documents: //li[contains(., "제출서류")]//text()[not(parent::span[@class="title"])]
+      target_audience: //li[contains(., "신청대상")]//text() | //li[contains(., "대상")]//text()
+      target_age: //li[contains(., "연령")]//text()[not(parent::span[@class="title"])]
+      startup_history: //li[contains(., "업력")]//text()[not(parent::span[@class="title"])]
+      exclusion_criteria: //li[contains(., "제외대상")]//text()[not(parent::span[@class="title"])]
+      evaluation_method: //li[contains(., "평가방법")]//text()[not(parent::span[@class="title"])]
+      industry: //li[contains(., "지원분야")]//text()[not(parent::span[@class="title"])]
+    details_xpath: //div[@class="view_cont"]//text() | //div[@class="view_cont"]//img/@alt
+    attachments_css: a.btn_down
+    date_regex: r'202[0-9]년\s*[0-9]+월\s*[0-9]+일'
+- id: smes
+  name: 중소벤처24
+  type: portal
+  start_urls:
+  - https://www.smes.go.kr/main/sportsBsnsPolicy
+  spider: generic
+  requires_playwright: true
+  wait_for_selector: table.tbl-list01 a
+  wait_time: 3000
+  selectors:
+    detail_links_css: table.tbl-list01 p.on-schedulelist-link a::attr(href)
+    detail_links_regex: fn_include_popOpen2\('([^']+)',\s*'[^']+',\s*'([^']+)',\s*'([^']+)'
+    detail_url_template: https://www.smes.go.kr/main/sportsBsnsPolicy/view?viewPblancSeq={0}&viewCntcInsttCd={1}&viewPblancId={2}
+    pagination_param: pageIndex
+    max_pages: 50
+    fields:
+      title: //div[contains(@class, "subject")]//text()
+      institution: //th[contains(., "주관기관")]/following-sibling::td//text()
+      operating_agency: //th[contains(., "주관기관")]/following-sibling::td//text()
+      recruit_period: //th[contains(., "신청기간")]/following-sibling::td//text() | //dt[contains(., "신청기간")]/following-sibling::dd//text()
+      event_period: ''
+      category: //th[contains(., "사업유형")]/following-sibling::td//text() | //dt[contains(., "사업유형")]/following-sibling::dd//text()
+      region: ''
+      benefits: //th[contains(., "사업개요")]/following-sibling::td//text() | //dt[contains(., "사업개요")]/following-sibling::dd//text()
+      apply_method: //th[contains(., "신청방법")]/following-sibling::td//text() | //dt[contains(., "신청방법")]/following-sibling::dd//text()
+      contact_agency: //th[contains(., "문의처")]/following-sibling::td//text() | //dt[contains(., "문의처")]/following-sibling::dd//text()
+      contact_phone: //th[contains(., "문의처")]/following-sibling::td//text() | //dt[contains(., "문의처")]/following-sibling::dd//text()
+      contact_email: ''
+      documents: ''
+      target_audience: //th[contains(., "지원대상")]/following-sibling::td//text() | //dt[contains(., "지원대상")]/following-sibling::dd//text()
+      target_age: ''
+      startup_history: ''
+      exclusion_criteria: ''
+      evaluation_method: ''
+      industry: ''
+    details_xpath: //dt[contains(., "사업개요")]/following-sibling::dd//text() | //div[contains(@class, "html-view")]//text()
+    attachments_css: td a[href*="getFile"], a[href*="download"]
+- id: kosmes
+  name: 중소벤처기업진흥공단
+  type: portal
+  start_urls:
+  - https://www.kosmes.or.kr/nsh/SH/NTS/SHNTS001M0.do
+  spider: generic
+  requires_playwright: true
+  wait_for_selector: table tbody a
+  selectors:
+    detail_links_xpath: //table//tbody//a/@onclick
+    detail_links_regex: fn_detail\((\d+)\)
+    detail_url_template: https://www.kosmes.or.kr/nsh/SH/NTS/SHNTS001F0.do?seqNo={0}&nowPage=1&tabPage=01
+    pagination_param: ''
+    max_pages: 1
+    fields:
+      title: //th[@id="TITL_NM"]//text()
+      institution: '"중소벤처기업진흥공단"'
+      operating_agency: '"중소벤처기업진흥공단"'
+      recruit_period: //td[@id="RCPT_PRD"]//text()
+      event_period: //td[@id="BSNS_PRD"]//text()
+      category: //td[@id="CATEGORY"]//text()
+      region: '"전국"'
+      benefits: //td[@id="SPRT_CN"]//text()
+      apply_method: //td[@id="APLY_MTHD"]//text()
+      contact_agency: //td[@id="INQR_DEPT"]//text()
+      contact_phone: //td[@id="INQR_TEL"]//text()
+      contact_email: ''
+      documents: //td[@id="SBMS_DOC"]//text()
+      target_audience: //td[@id="SPRT_TRGT"]//text()
+      target_age: ''
+      startup_history: ''
+      exclusion_criteria: //td[@id="EXCL_TRGT"]//text()
+      evaluation_method: //td[@id="EVL_MTHD"]//text()
+      industry: //td[@id="INDST_TYPE"]//text()
+    details_xpath: //div[@id="TTU_TXT"]//text()
+    attachments_css: div[id^="downFile"] a
+- id: sbiz24
+  name: 소상공인24
+  type: portal
+  start_urls:
+  - https://www.sbiz24.kr/#/combinePbancList
+  spider: generic
+  requires_playwright: true
+  wait_for_selector: td.c_pbancNm a
+  wait_time: 5000
+  selectors:
+    detail_links_css: td.c_pbancNm a::attr(href)
+    detail_links_regex: r'#/extldPbanc/([A-Z0-9_]+)'
+    detail_url_template: https://www.sbiz24.kr/#/extldPbanc/{0}
+    pagination_param: ''
+    max_pages: 1
+    fields:
+      title: //label[@title="공고명"]/following-sibling::div//text()
+      institution: //label[@title="소관기관"]/following-sibling::div//text()
+      operating_agency: //label[@title="사업수행기관"]/following-sibling::div//text()
+      recruit_period: //label[@title="신청기간"]/following-sibling::div//text()
+      event_period: ''
+      category: //label[starts-with(@title, "지원분야")]/following-sibling::div//text()
+      region: ''
+      benefits: ''
+      apply_method: //label[@title="사업신청방법설명"]/following-sibling::div//text()
+      contact_agency: ''
+      contact_phone: //label[@title="문의처"]/following-sibling::div//text()
+      contact_email: ''
+      documents: ''
+      target_audience: //label[@title="지원대상"]/following-sibling::div//text()
+      target_age: ''
+      startup_history: ''
+      exclusion_criteria: ''
+      evaluation_method: ''
+      industry: ''
+    details_xpath: //label[@title="공고내용"]/following-sibling::div//text()
+    attachments_css: button.file

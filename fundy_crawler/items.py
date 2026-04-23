@@ -1,0 +1,31 @@
+import scrapy
+
+class FundyCrawlerItem(scrapy.Item):
+    hash_id = scrapy.Field()
+    site_name = scrapy.Field()
+    title = scrapy.Field()
+    date = scrapy.Field()
+    institution = scrapy.Field()
+    operating_agency = scrapy.Field()
+    recruit_period = scrapy.Field()
+    deadline = scrapy.Field()
+    event_period = scrapy.Field()
+    category = scrapy.Field()
+    target_audience = scrapy.Field()
+    industry = scrapy.Field()
+    target_age = scrapy.Field()
+    corporate_type = scrapy.Field()
+    region = scrapy.Field()
+    details = scrapy.Field()
+    benefits = scrapy.Field()
+    evaluation_method = scrapy.Field()
+    startup_history = scrapy.Field()
+    exclusion_criteria = scrapy.Field()
+    attachments = scrapy.Field() # list of URLs
+    attachment_names = scrapy.Field() # list of attachment filenames
+    apply_method = scrapy.Field()
+    documents = scrapy.Field()
+    contact_agency = scrapy.Field()
+    contact_phone = scrapy.Field()
+    contact_email = scrapy.Field()
+    url = scrapy.Field()
