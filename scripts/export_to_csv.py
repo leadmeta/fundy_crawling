@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import os
 
-def export_db_to_csv(db_path='data/fundy_records.db', output_path='fundy_exports.csv'):
+def export_db_to_csv(db_path='data/fundy_records_raw.db', output_path='fundy_exports.csv'):
     if not os.path.exists(db_path):
         print(f"Error: Database file not found at {db_path}")
         sys.exit(1)

@@ -64,7 +64,7 @@ def db_connect():
     """Performs database connection using database settings from settings.py.
     Returns sqlalchemy engine instance
     """
-    return create_engine('sqlite:///data/fundy_records.db')
+    return create_engine('sqlite:///data/fundy_records_raw.db')
 
 def create_table(engine):
     Base.metadata.create_all(engine)

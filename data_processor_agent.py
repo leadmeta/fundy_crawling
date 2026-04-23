@@ -162,13 +162,14 @@ class DataExtractionAgent:
 
 class DBManagerAgent:
     """Agent responsible for reading raw DB and saving processed data."""
-    def __init__(self, db_path: str):
-        self.db_path = db_path
+    def __init__(self, raw_db_path: str, processed_db_path: str):
+        self.raw_db_path = raw_db_path
+        self.processed_db_path = processed_db_path
         self.logger = logging.getLogger("DBManagerAgent")
         self._init_processed_table()
 
     def _init_processed_table(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = sqlite3.connect(self.processed_db_path)
         cursor = conn.cursor()
         
         # Check if table exists with old schema and drop if necessary to avoid column errors
@@ -191,12 +192,13 @@ class DBManagerAgent:
         conn.close()
 
     def get_unprocessed_records(self, limit: int = 5) -> List[Dict[str, Any]]:
-        conn = sqlite3.connect(self.db_path)
+        conn = sqlite3.connect(self.raw_db_path)
         cursor = conn.cursor()
+        cursor.execute(f"ATTACH DATABASE '{self.processed_db_path}' AS proc_db")
         cursor.execute('''
             SELECT f.id, f.title, f.details, f.attachments, f.attachment_names
             FROM funding_records f
-            LEFT JOIN processed_funding_records p ON f.id = p.id
+            LEFT JOIN proc_db.processed_funding_records p ON f.id = p.id
             WHERE p.id IS NULL AND f.title IS NOT NULL
             LIMIT ?
         ''', (limit,))
@@ -207,15 +209,13 @@ class DBManagerAgent:
         return records
 
     def save_processed_record(self, record_id: str, data: Dict[str, Any]):
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        # 1. Update basic text columns in raw_db (for backward compatibility if needed)
         try:
-            # 1. Update basic text columns in funding_records (for backward compatibility if needed)
             if data:
-                # We check if columns exist in funding_records. The crawler DB has deadline, apply_method, documents.
-                # It does not natively have string columns for region, target_audience (they are joined IDs).
+                conn_raw = sqlite3.connect(self.raw_db_path)
+                cursor_raw = conn_raw.cursor()
                 try:
-                    cursor.execute('''
+                    cursor_raw.execute('''
                         UPDATE funding_records 
                         SET deadline = ?, documents = ?, apply_method = ?
                         WHERE id = ?
@@ -225,32 +225,40 @@ class DBManagerAgent:
                         data.get('apply_method'),
                         record_id
                     ))
+                    conn_raw.commit()
                 except sqlite3.OperationalError as e:
                     self.logger.warning(f"Could not update original funding_records fields: {e}")
-            
-            # 2. Save full structured JSON into processed_funding_records
+                finally:
+                    conn_raw.close()
+        except Exception as e:
+            self.logger.error(f"Raw DB Update Error for {record_id}: {e}")
+
+        # 2. Save full structured JSON into processed_db
+        conn_proc = sqlite3.connect(self.processed_db_path)
+        cursor_proc = conn_proc.cursor()
+        try:
             status = "SUCCESS" if data else "FAILED"
             json_str = json.dumps(data, ensure_ascii=False) if data else None
             
-            cursor.execute('''
+            cursor_proc.execute('''
                 INSERT OR REPLACE INTO processed_funding_records (id, status, extracted_json, processed_at)
                 VALUES (?, ?, ?, CURRENT_TIMESTAMP)
             ''', (record_id, status, json_str))
             
-            conn.commit()
+            conn_proc.commit()
             self.logger.info(f"Saved processed data for ID: {record_id}")
         except Exception as e:
-            self.logger.error(f"DB Save Error for {record_id}: {e}")
-            conn.rollback()
+            self.logger.error(f"Processed DB Save Error for {record_id}: {e}")
+            conn_proc.rollback()
         finally:
-            conn.close()
+            conn_proc.close()
 
 
 class OrchestratorAgent:
     """Main Agent that coordinates the workflow."""
-    def __init__(self, db_path: str):
+    def __init__(self, raw_db_path: str, processed_db_path: str):
         self.logger = logging.getLogger("OrchestratorAgent")
-        self.db_agent = DBManagerAgent(db_path)
+        self.db_agent = DBManagerAgent(raw_db_path, processed_db_path)
         self.extraction_agent = DataExtractionAgent()
         self.doc_processor = DocumentProcessor(self.extraction_agent.client)
 
@@ -324,12 +332,13 @@ class OrchestratorAgent:
             self.db_agent.save_processed_record(record['id'], structured_data)
 
 if __name__ == "__main__":
-    DB_PATH = os.path.join(os.path.dirname(__file__), "data", "fundy_records.db")
+    RAW_DB_PATH = os.path.join(os.path.dirname(__file__), "data", "fundy_records_raw.db")
+    PROCESSED_DB_PATH = os.path.join(os.path.dirname(__file__), "data", "fundy_records.db")
     
     # Use environment variable or set it directly
     if not os.environ.get("GEMINI_API_KEY"):
         print("WARNING: GEMINI_API_KEY environment variable is not set. Using Mock mode.")
         
-    orchestrator = OrchestratorAgent(db_path=DB_PATH)
+    orchestrator = OrchestratorAgent(raw_db_path=RAW_DB_PATH, processed_db_path=PROCESSED_DB_PATH)
     # Process up to 50 records in a batch
     orchestrator.run_pipeline(limit=50)
