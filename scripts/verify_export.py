@@ -1,0 +1,23 @@
+import pandas as pd
+df = pd.read_csv('fundy_processed_exports.csv', encoding='utf-8-sig')
+print(f'Total records: {len(df)}')
+print(f'Columns: {list(df.columns)}')
+print()
+for i, row in df.head(5).iterrows():
+    print(f'--- Record {i+1} ---')
+    site = row.get('site_name', 'N/A')
+    title = str(row.get('title', 'N/A'))[:60]
+    ft = row.get('funding_type', 'N/A')
+    tt = row.get('target_types', 'N/A')
+    reg = row.get('region', 'N/A')
+    rsd = row.get('recruit_start_date', 'N/A')
+    red = row.get('recruit_end_date', 'N/A')
+    bud = row.get('budget', 'N/A')
+    print(f'  site: {site}')
+    print(f'  title: {title}')
+    print(f'  funding_type: {ft}')
+    print(f'  target_types: {tt}')
+    print(f'  region: {reg}')
+    print(f'  dates: {rsd} ~ {red}')
+    print(f'  budget: {bud}')
+    print()

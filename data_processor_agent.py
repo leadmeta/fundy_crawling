@@ -208,7 +208,7 @@ class DBManagerAgent:
         conn.close()
         return records
 
-    def save_processed_record(self, record_id: str, data: Dict[str, Any]):
+    def save_processed_record(self, record_id: str, data: Dict[str, Any], status: str = None):
         # 1. Update basic text columns in raw_db (for backward compatibility if needed)
         try:
             if data:
@@ -237,7 +237,8 @@ class DBManagerAgent:
         conn_proc = sqlite3.connect(self.processed_db_path)
         cursor_proc = conn_proc.cursor()
         try:
-            status = "SUCCESS" if data else "FAILED"
+            if not status:
+                status = "SUCCESS" if data else "FAILED"
             json_str = json.dumps(data, ensure_ascii=False) if data else None
             
             cursor_proc.execute('''
@@ -254,13 +255,60 @@ class DBManagerAgent:
             conn_proc.close()
 
 
+class DataQualityAgent:
+    """Agent responsible for checking the quality of crawled data before processing."""
+    
+    # 사이트 네비게이션/메뉴 등 쓰레기 데이터 감지 마커
+    GARBAGE_MARKERS = [
+        'MyGOV', '전체메뉴', '누리집', '로그인 연장하기', '자동 로그아웃',
+        '회원가입', '본문 바로가기', '모바일 메뉴 닫기', 'window.__NUXT__',
+        '인증서등록/관리', '복합인증관리', '보안센터', '화면크기 제어',
+        '시니어 지원', '국민비서 구삐', 'For Foreigners',
+    ]
+
+    def __init__(self):
+        self.logger = logging.getLogger("DataQualityAgent")
+
+    def _is_garbage_content(self, text: str) -> bool:
+        """본문 텍스트가 실제 정책 내용이 아닌 사이트 네비게이션/메뉴 쓰레기인지 판별"""
+        if not text:
+            return True  # 빈 내용도 쓰레기로 처리
+        # 마커 3개 이상 발견되면 쓰레기로 판정
+        hit_count = sum(1 for marker in self.GARBAGE_MARKERS if marker in text)
+        return hit_count >= 3
+
+    def evaluate_quality(self, record: dict) -> tuple[bool, str]:
+        """
+        레코드가 AI 처리할 만한 품질인지 검증
+        Returns: (is_processable, reason)
+        """
+        details = record.get('details', '') or ''
+        title = record.get('title', '') or ''
+        
+        # 제목이 없는 레코드는 건너뛰기
+        if not title.strip():
+            return False, "empty title"
+        
+        # 본문이 너무 짧으면 건너뛰기 (의미있는 정보 추출 불가)
+        if len(details.strip()) < 30:
+            return False, f"details too short ({len(details)} chars)"
+        
+        # 쓰레기 콘텐츠 감지
+        if self._is_garbage_content(details):
+            return False, "garbage content detected"
+        
+        return True, "Passed"
+
+
 class OrchestratorAgent:
     """Main Agent that coordinates the workflow."""
+    
     def __init__(self, raw_db_path: str, processed_db_path: str):
         self.logger = logging.getLogger("OrchestratorAgent")
         self.db_agent = DBManagerAgent(raw_db_path, processed_db_path)
         self.extraction_agent = DataExtractionAgent()
         self.doc_processor = DocumentProcessor(self.extraction_agent.client)
+        self.quality_agent = DataQualityAgent()
 
     def run_pipeline(self, limit: int = 5):
         self.logger.info("Starting Data Processing Pipeline...")
@@ -271,7 +319,14 @@ class OrchestratorAgent:
             return
 
         for record in records:
-            self.logger.info(f"--- Processing Record: {record['title']} ---")
+            self.logger.info(f"--- Processing Record: {record['title'][:50]} ---")
+            
+            # 0. 데이터 품질 사전 검증 (쓰레기 데이터 필터링 파이프)
+            is_processable, reason = self.quality_agent.evaluate_quality(record)
+            if not is_processable:
+                self.logger.warning(f"Quality Check Failed for {record['id'][:16]}: {reason}")
+                self.db_agent.save_processed_record(record['id'], None, status="SKIPPED")
+                continue
             
             # 1. Parse Attachments
             attachments = json.loads(record['attachments']) if record['attachments'] else []

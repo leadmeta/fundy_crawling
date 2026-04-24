@@ -352,6 +352,22 @@ class GenericSpider(scrapy.Spider):
                     callback=self.parse_list
                 )
 
+    # 네비게이션/메뉴 등 웹사이트 공통 UI 텍스트가 본문으로 잘못 수집되는 것을 감지
+    GARBAGE_MARKERS = [
+        'MyGOV', '전체메뉴', '누리집', '로그인 연장하기', '자동 로그아웃',
+        '회원가입', '본문 바로가기', '모바일 메뉴 닫기', 'window.__NUXT__',
+        '인증서등록/관리', '복합인증관리', '보안센터', '화면크기 제어',
+        '시니어 지원', '국민비서 구삐', 'For Foreigners',
+    ]
+
+    def _is_garbage_content(self, text: str) -> bool:
+        """본문 텍스트가 실제 정책 내용이 아닌 사이트 네비게이션/메뉴 쓰레기인지 판별"""
+        if not text:
+            return False
+        # 마커 3개 이상 발견되면 쓰레기로 판정
+        hit_count = sum(1 for marker in self.GARBAGE_MARKERS if marker in text)
+        return hit_count >= 3
+
     def extract_field(self, response, field_xpath):
         if not field_xpath:
             return ""
@@ -378,27 +394,29 @@ class GenericSpider(scrapy.Spider):
             extracted_details = self.extract_field(response, details_xpath)
             
         if not extracted_details or len(extracted_details) < 10:
-            # Fallback for empty details
+            # Fallback for empty details (안전한 셀렉터만 사용, //body//text() 절대 금지)
             fallback_xpaths = [
                 '//div[contains(@class, "view_cont")]//text()',
                 '//div[contains(@class, "board_view")]//text()',
                 '//div[contains(@class, "txt_area")]//text()',
-                '//div[contains(@class, "content")]//text()',
+                '//div[contains(@class, "content") and not(contains(@class, "nav")) and not(contains(@class, "header")) and not(contains(@class, "footer"))]//text()',
                 '//div[@id="contents"]//text()',
                 '//div[@id="content"]//text()',
                 '//table[contains(@class, "boardview-table")]//text()',
                 '//div[contains(@class, "view_top_info")]//text()',
-                # 최후의 수단: body 이하의 모든 텍스트
-                '//body//text()'
             ]
             for fb in fallback_xpaths:
                 text_val = self.extract_field(response, fb)
                 # 네비게이션/푸터 등을 감안하여 의미 있는 길이일 때만 채택
-                if text_val and len(text_val) > 30:
-                    extracted_details = text_val
+                if text_val and len(text_val) > 30 and not self._is_garbage_content(text_val):
                     extracted_details = text_val
                     break
                     
+        # 최종 쓰레기 데이터 검증
+        if self._is_garbage_content(extracted_details):
+            self.logger.warning(f"Garbage content detected for {response.url}, clearing details.")
+            extracted_details = ""
+
         item['details'] = extracted_details.strip() if extracted_details.strip() else '해당사항 없음'
         
         # 3. API 기반 사이트(SPA)에서 상세 페이지 스크래핑 실패 시 item_info에서 폴백
