@@ -1,0 +1,55 @@
+name: Daily Crawler Pipeline
+
+on:
+  schedule:
+    # 한국 시간(KST) 오전 6시 5분 = UTC 기준 전날 21시 5분
+    - cron: '5 21 * * *'
+  workflow_dispatch: # 수동 실행을 위한 버튼 활성화
+
+jobs:
+  crawl-and-process:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+        
+      - name: 파이썬 3.11 환경 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: 의존성 패키지 및 Playwright 브라우저 설치
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          playwright install chromium
+          
+      - name: 크롤러 및 AI 데이터 정제 스크립트 실행
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python run_all.py
+          
+      - name: 완성된 DB를 Cloudflare R2에 업로드 (AWS CLI)
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          aws s3 cp data/fundy_records.db s3://${{ secrets.R2_BUCKET_NAME }}/database/fundy_records.db \
+            --endpoint-url https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+            
+      - name: Project B (leadmeta/fundy) 동기화 트리거
+        run: |
+          curl -X POST https://api.github.com/repos/leadmeta/fundy/dispatches \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GH_PAT }}" \
+            -d '{"event_type": "sync-db"}'
+            
+      - name: 텔레그램 에러 알림 전송 (실패 시에만 실행)
+        if: failure()
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="🚨 [Fundy Crawler] Github Actions 데이터 크롤링 및 DB 파이프라인 실행 중 에러가 발생했습니다. 로그를 확인해주세요!"
