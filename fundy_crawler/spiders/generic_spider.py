@@ -368,11 +368,11 @@ class GenericSpider(scrapy.Spider):
         hit_count = sum(1 for marker in self.GARBAGE_MARKERS if marker in text)
         return hit_count >= 3
 
-    def extract_field(self, response, field_xpath):
+    def extract_field(self, response, field_xpath, join_char='\n'):
         if not field_xpath:
             return ""
         texts = response.xpath(field_xpath).getall()
-        return ' '.join(t.strip() for t in texts if t.strip())
+        return join_char.join(t.strip() for t in texts if t.strip())
 
     def parse_detail(self, response):
         """상세 페이지 파싱 (Dynamic Selector 기반)"""
