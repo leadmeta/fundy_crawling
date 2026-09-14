@@ -134,49 +134,135 @@ class DocumentProcessor:
 
 
 class DataExtractionAgent:
-    """Agent responsible for analyzing combined text using LLM."""
+    """Pluggable Data Extraction Agent supporting DeepSeek, OpenAI, Gemini, and any OpenAI-compatible API.
+    Can be swapped dynamically via environment variables (LLM_PROVIDER, LLM_MODEL) without code changes.
+    """
     def __init__(self, api_key: str = None):
         self.logger = logging.getLogger("DataExtractionAgent")
-        key = api_key or os.environ.get("GEMINI_API_KEY")
-        if not key:
-            self.logger.error("GEMINI_API_KEY is not set. Extraction will fail.")
-            self.client = None
+        
+        # 1. Read configuration from environment
+        self.provider = (os.environ.get("LLM_PROVIDER") or "").lower().strip()
+        
+        # Auto-detect provider if not explicitly set
+        if not self.provider:
+            if os.environ.get("DEEPSEEK_API_KEY"):
+                self.provider = "deepseek"
+            elif os.environ.get("OPENAI_API_KEY"):
+                self.provider = "openai"
+            elif os.environ.get("GEMINI_API_KEY"):
+                self.provider = "gemini"
+            else:
+                self.provider = "none"
+
+        # 2. Configure model name and credentials
+        if self.provider == "deepseek":
+            self.model = os.environ.get("LLM_MODEL") or os.environ.get("DEEPSEEK_MODEL") or "deepseek-v4.1-flash"
+            self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY")
+            self.base_url = os.environ.get("DEEPSEEK_BASE_URL") or "https://api.deepseek.com/v1"
+        elif self.provider == "openai":
+            self.model = os.environ.get("LLM_MODEL") or os.environ.get("OPENAI_MODEL") or "gpt-5.6-luna-max"
+            self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
+            self.base_url = os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1"
+        elif self.provider == "gemini":
+            self.model = os.environ.get("LLM_MODEL") or os.environ.get("GEMINI_MODEL") or "gemini-2.5-flash"
+            self.api_key = api_key or os.environ.get("GEMINI_API_KEY")
+            self.base_url = None
         else:
-            self.client = genai.Client(api_key=key)
+            self.model = os.environ.get("LLM_MODEL", "mock")
+            self.api_key = None
+            self.base_url = None
+
+        # 3. Client readiness check
+        if self.provider == "gemini" and genai and self.api_key:
+            self.client = genai.Client(api_key=self.api_key)
+        elif self.api_key:
+            self.client = "ready"
+        else:
+            self.client = None
+            self.logger.warning(f"No API key configured for provider '{self.provider}'. Extraction will run in mock mode.")
+
+        self.logger.info(f"Initialized DataExtractionAgent: provider='{self.provider}', model='{self.model}'")
 
     async def extract_with_retry(self, prompt: str, files: list, max_retries=3) -> Optional[Dict[str, Any]]:
         if not self.client:
             return None
 
-        contents = [prompt]
-        if files:
-            contents.extend(files)
+        # A. Google Gemini Provider
+        if self.provider == "gemini":
+            contents = [prompt]
+            if files:
+                contents.extend(files)
+
+            for attempt in range(max_retries):
+                try:
+                    self.logger.info(f"Sending request to Gemini ({self.model}) (Attempt {attempt+1}/{max_retries})...")
+                    response = await self.client.aio.models.generate_content(
+                        model=self.model,
+                        contents=contents,
+                        config=types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            response_schema=FundingSchema,
+                            temperature=0.1
+                        ),
+                    )
+                    return json.loads(response.text)
+                except Exception as e:
+                    self.logger.error(f"Gemini API Error: {type(e).__name__} - {e}")
+                    if attempt < max_retries - 1:
+                        await asyncio.sleep(2 ** attempt * 3)
+                    else:
+                        return None
+
+        # B. DeepSeek or OpenAI (OpenAI-compatible Chat Completion API)
+        schema_json = json.dumps(FundingSchema.model_json_schema(), ensure_ascii=False)
+        system_msg = (
+            "You are an expert government policy and startup grant analyst.\n"
+            "Extract structured data strictly according to this JSON Schema:\n"
+            f"{schema_json}\n"
+            "Output valid, raw JSON only without markdown formatting or backticks."
+        )
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+
+        body = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.1,
+            "response_format": {"type": "json_object"}
+        }
+
+        endpoint = f"{self.base_url.rstrip('/')}/chat/completions"
 
         for attempt in range(max_retries):
             try:
-                self.logger.info(f"Sending request to Gemini (Attempt {attempt+1}/{max_retries})...")
-                # 비동기 구글 제미나이 SDK 모델 호출
-                response = await self.client.aio.models.generate_content(
-                    model='gemini-2.5-flash',
-                    contents=contents,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        response_schema=FundingSchema,
-                        temperature=0.1
-                    ),
-                )
-                return json.loads(response.text)
+                self.logger.info(f"Sending request to {self.provider.upper()} ({self.model}) (Attempt {attempt+1}/{max_retries})...")
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(endpoint, headers=headers, json=body, timeout=aiohttp.ClientTimeout(total=45)) as resp:
+                        if resp.status != 200:
+                            err_body = await resp.text()
+                            self.logger.error(f"{self.provider.upper()} API Error {resp.status}: {err_body[:200]}")
+                            if attempt < max_retries - 1:
+                                await asyncio.sleep(2 ** attempt * 3)
+                                continue
+                            return None
+
+                        data = await resp.json()
+                        raw_content = data["choices"][0]["message"]["content"]
+                        clean_json = raw_content.strip()
+                        if clean_json.startswith("```"):
+                            clean_json = clean_json.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+                        return json.loads(clean_json)
             except Exception as e:
-                import traceback
-                self.logger.error(f"Gemini API Error: {type(e).__name__} - {e}")
-                self.logger.debug(traceback.format_exc())
-                
+                self.logger.error(f"{self.provider.upper()} Extraction Error: {type(e).__name__} - {e}")
                 if attempt < max_retries - 1:
-                    sleep_time = 2 ** attempt * 5
-                    self.logger.info(f"Retrying in {sleep_time} seconds...")
-                    await asyncio.sleep(sleep_time)
+                    await asyncio.sleep(2 ** attempt * 3)
                 else:
-                    self.logger.error("Max retries reached. Extraction failed.")
                     return None
 
 class DBManagerAgent:
